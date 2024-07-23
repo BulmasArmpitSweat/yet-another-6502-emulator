@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef signed char byte;
 typedef unsigned char u_byte;
@@ -9,21 +10,24 @@ typedef unsigned int __useconds_t;
 typedef unsigned int uint;
 
 typedef unsigned short ushort;
-#define RESET_VEC            0xFFFC
 
-#define CARRY_POS            0
-#define ZERO_POS             1
-#define INERRUPTDISABLE_POS  2
-#define DECIMALMODE_POS      3
-#define BRKCOMMAND_POS       4
+/* 0xFFFC */
+#define RESET_VEC                   UINT16_MAX - 3
+
+#define CARRY_POS                   0
+#define ZERO_POS                    1
+#define INERRUPTDISABLE_POS         2
+#define DECIMALMODE_POS             3
+#define BRKCOMMAND_POS              4
 /* Nothing */
-#define OVERFLOW_POS         6
-#define NEGATIVE_POS         7
+#define OVERFLOW_POS                6
+#define NEGATIVE_POS                7
 
-#define Z_PAGE_END           0x100
-#define STACK_END            0x200
+#define Z_PAGE_END                  0x100
+#define STACK_END                   0x200
 
-#define MAX_FUNCTION_STACK_SIZE 5
+#define MAX_FUNCTION_STACK_SIZE     5
+#define MAX_MEM_SIZE                UINT16_MAX
 
 typedef enum
 {

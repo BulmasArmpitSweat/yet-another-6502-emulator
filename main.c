@@ -10,7 +10,7 @@ InstructionInfo instructionTable[256] = {
     // 0x00 to 0x0F
     { *BRK, 7,    IMPLIED },
     { *ORA, 6,    X_INDEXED_ZERO_PAGE_INDIRECT },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *SLO, 8,    X_INDEXED_ZERO_PAGE_INDIRECT },       // *
     { *NOP, 3,    ZERO_PAGE },                          // *
     { *ORA, 3,    ZERO_PAGE },
@@ -27,7 +27,7 @@ InstructionInfo instructionTable[256] = {
     // 0x10 to 0x1F
     { *BPL, 2,    RELATIVE },
     { *ORA, 5,    ZERO_PAGE_INDIRECT_Y_INDEXED },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *SLO, 8,    ZERO_PAGE_INDIRECT_Y_INDEXED },       // *
     { *NOP, 4,    X_INDEXED_ZERO_PAGE },                // *
     { *ORA, 4,    X_INDEXED_ZERO_PAGE },
@@ -44,7 +44,7 @@ InstructionInfo instructionTable[256] = {
     // 0x20 to 0x2F
     { *JSR, 6,    ABSOLUTE },
     { *AND, 6,    X_INDEXED_ZERO_PAGE_INDIRECT },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *RLA, 8,    X_INDEXED_ZERO_PAGE_INDIRECT },       // *
     { *BIT, 3,    ZERO_PAGE },
     { *AND, 3,    ZERO_PAGE },
@@ -61,7 +61,7 @@ InstructionInfo instructionTable[256] = {
     // 0x30 to 0x3F
     { *BMI, 2,    RELATIVE },
     { *AND, 5,    ZERO_PAGE_INDIRECT_Y_INDEXED },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *RLA, 8,    ZERO_PAGE_INDIRECT_Y_INDEXED },       // *
     { *NOP, 4,    X_INDEXED_ZERO_PAGE },                // *
     { *AND, 4,    X_INDEXED_ZERO_PAGE },
@@ -78,7 +78,7 @@ InstructionInfo instructionTable[256] = {
     // 0x40 to 0x4F
     { *RTI, 6,    IMPLIED },
     { *EOR, 6,    X_INDEXED_ZERO_PAGE_INDIRECT },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *SRE, 8,    X_INDEXED_ZERO_PAGE_INDIRECT },       // *
     { *NOP, 3,    ZERO_PAGE },                          // *
     { *EOR, 3,    ZERO_PAGE },
@@ -95,7 +95,7 @@ InstructionInfo instructionTable[256] = {
     // 0x50 to 0x5F
     { *BVC, 2,    RELATIVE },
     { *EOR, 5,    ZERO_PAGE_INDIRECT_Y_INDEXED },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *SRE, 8,    ZERO_PAGE_INDIRECT_Y_INDEXED },       // *
     { *NOP, 4,    X_INDEXED_ZERO_PAGE },                // *
     { *EOR, 4,    X_INDEXED_ZERO_PAGE },
@@ -112,7 +112,7 @@ InstructionInfo instructionTable[256] = {
     // 0x60 to 0x6F
     { *RTS, 6,    IMPLIED },
     { *ADC, 6,    X_INDEXED_ZERO_PAGE_INDIRECT },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *RRA, 8,    X_INDEXED_ZERO_PAGE_INDIRECT },       // *
     { *NOP, 3,    ZERO_PAGE },                          // *
     { *ADC, 3,    ZERO_PAGE },
@@ -129,7 +129,7 @@ InstructionInfo instructionTable[256] = {
     // 0x70 to 0x7F
     { *BVS, 2,    RELATIVE },
     { *ADC, 5,    ZERO_PAGE_INDIRECT_Y_INDEXED },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *RRA, 8,    ZERO_PAGE_INDIRECT_Y_INDEXED },       // *
     { *NOP, 4,    X_INDEXED_ZERO_PAGE },                // *
     { *ADC, 4,    X_INDEXED_ZERO_PAGE },
@@ -163,7 +163,7 @@ InstructionInfo instructionTable[256] = {
     // 0x90 to 0x9F
     { *BCC, 2,    RELATIVE },
     { *STA, 6,    ZERO_PAGE_INDIRECT_Y_INDEXED },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *SHA, 6,    ZERO_PAGE_INDIRECT_Y_INDEXED },       // *
     { *STY, 4,    X_INDEXED_ZERO_PAGE },
     { *STA, 4,    X_INDEXED_ZERO_PAGE },
@@ -197,7 +197,7 @@ InstructionInfo instructionTable[256] = {
     // 0xB0 to 0xBF
     { *BCS, 2,    RELATIVE },
     { *LDA, 5,    ZERO_PAGE_INDIRECT_Y_INDEXED },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *LAX, 5,    ZERO_PAGE_INDIRECT_Y_INDEXED },       // *
     { *LDY, 4,    X_INDEXED_ZERO_PAGE },
     { *LDA, 4,    X_INDEXED_ZERO_PAGE },
@@ -231,7 +231,7 @@ InstructionInfo instructionTable[256] = {
     // 0xD0 to 0xDF
     { *BNE, 2,    RELATIVE },
     { *CMP, 5,    ZERO_PAGE_INDIRECT_Y_INDEXED },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *DCP, 8,    ZERO_PAGE_INDIRECT_Y_INDEXED },       // *
     { *NOP, 4,    X_INDEXED_ZERO_PAGE },                // *
     { *CMP, 3,    ZERO_PAGE },
@@ -265,7 +265,7 @@ InstructionInfo instructionTable[256] = {
     // 0xF0 to 0xFF
     { *BEQ, 2,    RELATIVE },
     { *SBC, 5,    ZERO_PAGE_INDIRECT_Y_INDEXED },
-    { *JAM, -1,    NOTHING },                            // *
+    { *JAM, -1,   NOTHING },                            // *
     { *ISC, 8,    ZERO_PAGE_INDIRECT_Y_INDEXED },       // *
     { *NOP, 4,    X_INDEXED_ZERO_PAGE },                // *
     { *SBC, 4,    X_INDEXED_ZERO_PAGE },
@@ -288,15 +288,27 @@ unsigned char set_bit(unsigned char d, char i) {
 int main() {
     cpu main;
 
-    main.mem = calloc(MAX_MEMORY_SIZE, 1);
+    main.A  =
+    main.X  =
+    main.Y  =
+    main.SR =
+    main.PC = 0;
+    
+    main.quit = false;
+
     /* Allocate memory block and registers */
     /* 6502 could access up to 65535 bytes (64K) of memory */
     /* This is not the 6510, shut the fuck up */
-    mem = calloc(UINT16_MAX, 1);
-    if (mem == NULL) return -1;
-    PC = mem[RESET_VEC];
+    main.mem = calloc(MAX_MEM_SIZE, 1);
+
+    if (main.mem == NULL) return -1;
+    main.PC = main.mem[RESET_VEC];
+    
+    instructionTable[main.mem[main.PC]].InstructionPointer
+    // TODO: Do this
+    (instructionTable[main.mem[main.PC]].mode, instructionTable[main.mem[main.PC]].cycles, NULL, NULL);
     // TODO: Do shit
 
-    free(mem);
+    free(main.mem);
     return 0;
 }
