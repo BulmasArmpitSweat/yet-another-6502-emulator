@@ -87,6 +87,7 @@ extern char* ERROR_CODE_STRING[9];
         void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
         AddressingModes mode;
         int cycles;
+        bool page_crossed_cycle_exception;
     } InstructionInfo;
 #elif defined(__linux__)
 
@@ -112,6 +113,7 @@ extern char* ERROR_CODE_STRING[9];
         void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
         AddressingModes mode;
         int cycles;
+        bool page_crossed_cycle_exception;
     } InstructionInfo;
 #else
 #error "Unsupported Platform"
@@ -218,7 +220,7 @@ void ANC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void RLA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void SRE(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 
-void ALR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
+void ASR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void RRA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void ARR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void SAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
