@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef signed char byte;
+typedef signed char byte_raw;
 typedef unsigned char u_byte;
 typedef bool bit;
 
@@ -11,23 +11,92 @@ typedef unsigned int uint;
 
 typedef unsigned short ushort;
 
+#if defined(_WIN32) || defined(_WIN64)
+
+    typedef struct
+    {
+        byte_raw SR;
+        u_byte A;
+        u_byte X, Y;
+        ushort PC;
+        byte_raw* mem;
+
+        byte_raw function_stack[5];
+        byte_raw FSP;
+        __useconds_t microsecondsPerCycle;
+        bool quit;
+
+        ushort last_accessed_memory_location;
+    } cpu;
+
+    typedef struct
+    {
+        void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
+        AddressingModes mode;
+        int cycles;
+        bool page_crossed_cycle_exception;
+    } InstructionInfo;
+#elif defined(__linux__)
+
+    typedef struct __attribute__((packed, aligned(4)))
+    {
+        byte_raw SR;
+        u_byte A;
+        u_byte X, Y;
+        ushort PC;
+        byte_raw* mem;
+
+        byte_raw function_stack[5];
+        byte_raw FSP;
+        __useconds_t microsecondsPerCycle;
+        bool quit;
+
+        ushort last_accessed_memory_location;
+    } cpu;
+
+
+    typedef struct __attribute__((packed, aligned(4)))
+    {
+        void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
+        AddressingModes mode;
+        int cycles;
+        bool page_crossed_cycle_exception;
+    } InstructionInfo;
+#else
+#error "Unsupported Platform"
+#endif
+
 /* 0xFFFC */
 #define RESET_VEC                   UINT16_MAX - 3
 
-#define CARRY_POS                   0
-#define ZERO_POS                    1
-#define INERRUPTDISABLE_POS         2
-#define DECIMALMODE_POS             3
-#define BRKCOMMAND_POS              4
-/* Nothing */
-#define OVERFLOW_POS                6
-#define NEGATIVE_POS                7
+#define CARRY                   0b00000001
+#define ZERO                    0b00000010
+#define INERRUPT_DISABLE        0b00000100
+#define DECIMAL_MODE            0b00001000
+#define BRK_COMMAND             0b00010000
+/* Nothing                      0b00100000 */
+#define OVERFLOW                0b01000000
+#define NEGATIVE                0b10000000
 
 #define Z_PAGE_END                  0x100
 #define STACK_END                   0x200
 
 #define MAX_FUNCTION_STACK_SIZE     5
 #define MAX_MEM_SIZE                UINT16_MAX
+
+static inline void set_flag(cpu* cpu, const byte_raw flag) {
+    cpu->SR |= flag;
+}
+
+static inline void reset_flag(cpu* cpu, const byte_raw flag) {
+    cpu->SR &= ~flag;
+}
+
+static inline void set_flags(byte_raw SR, byte_raw result) {
+    if (result == 0) {
+
+    }
+}
 
 typedef enum
 {
@@ -62,62 +131,6 @@ typedef enum ERROR_CODES
 
 extern char* ADDRESSING_MODES_STRING[15];
 extern char* ERROR_CODE_STRING[9];
-
-#if defined(_WIN32) || defined(_WIN64)
-
-    typedef struct
-    {
-        byte bus;
-        bit C, Z, I, D, B, V, N;
-        u_byte A, *SP;
-        byte X, Y;
-        ushort PC;
-        byte memory[MAX_MEMORY_SIZE];
-
-        byte function_stack[MAX_FUNCTION_STACK_SIZE];
-        byte FSP;
-        __useconds_t microsecondsPerCycle;
-        bool quit;
-
-        ushort last_accessed_memory_location;
-    } cpu;
-
-    typedef struct
-    {
-        void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
-        AddressingModes mode;
-        int cycles;
-        bool page_crossed_cycle_exception;
-    } InstructionInfo;
-#elif defined(__linux__)
-
-    typedef struct __attribute__((packed, aligned(4)))
-    {
-        byte SR;
-        u_byte A;
-        byte X, Y;
-        ushort PC;
-        byte* mem;
-
-        byte function_stack[MAX_FUNCTION_STACK_SIZE];
-        byte FSP;
-        __useconds_t microsecondsPerCycle;
-        bool quit;
-
-        ushort last_accessed_memory_location;
-    } cpu;
-
-
-    typedef struct __attribute__((packed, aligned(4)))
-    {
-        void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
-        AddressingModes mode;
-        int cycles;
-        bool page_crossed_cycle_exception;
-    } InstructionInfo;
-#else
-#error "Unsupported Platform"
-#endif
 
 /*
     ------------------------------------------------------------------------------------------------------

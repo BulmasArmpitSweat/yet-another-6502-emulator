@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "6502.h"
+#include "include/6502.h"
 
 InstructionInfo instructionTable[256] = {
     // Instructions marked with a '*' are illegal opcodes
@@ -305,7 +305,6 @@ int main() {
     main->PC = main->mem[RESET_VEC];
     
     instructionTable[main->mem[main->PC]].InstructionPointer
-    // TODO: Do this
     (instructionTable[main->mem[main->PC]].mode, instructionTable[main->mem[main->PC]].cycles, main, instructionTable[main->mem[main->PC]].page_crossed_cycle_exception);
     // TODO: Do shit
 
