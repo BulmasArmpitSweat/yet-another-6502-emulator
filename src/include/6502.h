@@ -1,136 +1,4 @@
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdint.h>
-
-typedef signed char byte_raw;
-typedef unsigned char u_byte;
-typedef bool bit;
-
-typedef unsigned int __useconds_t;
-typedef unsigned int uint;
-
-typedef unsigned short ushort;
-
-#if defined(_WIN32) || defined(_WIN64)
-
-    typedef struct
-    {
-        byte_raw SR;
-        u_byte A;
-        u_byte X, Y;
-        ushort PC;
-        byte_raw* mem;
-
-        byte_raw function_stack[5];
-        byte_raw FSP;
-        __useconds_t microsecondsPerCycle;
-        bool quit;
-
-        ushort last_accessed_memory_location;
-    } cpu;
-
-    typedef struct
-    {
-        void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
-        AddressingModes mode;
-        int cycles;
-        bool page_crossed_cycle_exception;
-    } InstructionInfo;
-#elif defined(__linux__)
-
-    typedef struct __attribute__((packed, aligned(4)))
-    {
-        byte_raw SR;
-        u_byte A;
-        u_byte X, Y;
-        ushort PC;
-        byte_raw* mem;
-
-        byte_raw function_stack[5];
-        byte_raw FSP;
-        __useconds_t microsecondsPerCycle;
-        bool quit;
-
-        ushort last_accessed_memory_location;
-    } cpu;
-
-
-    typedef struct __attribute__((packed, aligned(4)))
-    {
-        void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
-        AddressingModes mode;
-        int cycles;
-        bool page_crossed_cycle_exception;
-    } InstructionInfo;
-#else
-#error "Unsupported Platform"
-#endif
-
-/* 0xFFFC */
-#define RESET_VEC                   UINT16_MAX - 3
-
-#define CARRY                   0b00000001
-#define ZERO                    0b00000010
-#define INERRUPT_DISABLE        0b00000100
-#define DECIMAL_MODE            0b00001000
-#define BRK_COMMAND             0b00010000
-/* Nothing                      0b00100000 */
-#define OVERFLOW                0b01000000
-#define NEGATIVE                0b10000000
-
-#define Z_PAGE_END                  0x100
-#define STACK_END                   0x200
-
-#define MAX_FUNCTION_STACK_SIZE     5
-#define MAX_MEM_SIZE                UINT16_MAX
-
-static inline void set_flag(cpu* cpu, const byte_raw flag) {
-    cpu->SR |= flag;
-}
-
-static inline void reset_flag(cpu* cpu, const byte_raw flag) {
-    cpu->SR &= ~flag;
-}
-
-static inline void set_flags(byte_raw SR, byte_raw result) {
-    if (result == 0) {
-
-    }
-}
-
-typedef enum
-{
-    IMPLIED,                        // N/A
-    ACCUMULATOR,                    // A
-    IMMEDIATE,                      // #$nn
-    ABSOLUTE,                       // $nnnn
-    X_INDEXED_ABSOLUTE,             // $nnnn,X
-    Y_INDEXED_ABSOLUTE,             // $nnnn,Y
-    ABSOLUTE_INDIRECT,              // ($nnnn)
-    ZERO_PAGE,                      // $nn
-    X_INDEXED_ZERO_PAGE,            // $nn,X
-    Y_INDEXED_ZERO_PAGE,            // $nn,Y
-    X_INDEXED_ZERO_PAGE_INDIRECT,   // ($nn,X)
-    ZERO_PAGE_INDIRECT_Y_INDEXED,   // (&nn),Y
-    RELATIVE,                       // $nnnn
-    NOTHING,                        // N/A
-} AddressingModes;
-
-typedef enum ERROR_CODES
-{
-    ERR_UNSUPPORTED_ADDR_MODE,
-    ERR_NO_INPUT_PROVIDED,
-    ERR_REGISTERS_NOT_PRESENT,
-    ERR_FUNCTION_POINTER_MISALIGNED,
-    ERR_SDL_INIT_FAILED,
-    ERR_SDL_WINDOW_ASSERTION_FAILED,
-    ERR_SDL_RENDERER_ASSERTION_FAILED,
-    ERR_SDL_TEXTURE_ASSERTION_FAILED,
-    ERR_TESTING_ERROR_CODE
-} ERROR_CODES;
-
-extern char* ADDRESSING_MODES_STRING[15];
-extern char* ERROR_CODE_STRING[9];
+#include "6502-types.h"
 
 /*
     ------------------------------------------------------------------------------------------------------
@@ -151,17 +19,17 @@ extern char* ERROR_CODE_STRING[9];
     ------------------------------------------------------------------------------------------------------
 */
 
-void ADC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Add memory to accumulator with carry
-void AND(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // "AND" memory with accumulator
-void ASL(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Shift left one bit (memory or accumulator)
+void ADC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // A + M + C -> A, C
+void AND(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // A & M → A
+void ASL(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // C <- /M7...M0/ <- 0
 
-void BCC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Branch on carry clear
-void BCS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Branch on carry set
-void BEQ(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Branch on result zero
-void BIT(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Test bits in memory with accumulator
-void BMI(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Branch on result minus
-void BNE(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Branch on result not zero
-void BPL(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Branch on result plus
+void BCC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // Branch on C == 0
+void BCS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // Branch on C == 1
+void BEQ(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // Branch on Z == 1
+void BIT(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // A & M, M7 -> N, M6 -> V
+void BMI(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // Branch on N == 1
+void BNE(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // Branch on Z == 0
+void BPL(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // Branch on N == 0
 void BRK(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Force break
 void BVC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Branch on overflow clear
 void BVS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Branch on overflow set
@@ -228,7 +96,7 @@ void TYA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 
 void JAM(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // For realism; Freezes the CPU
 
-void SLO(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
+void SLO(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // M >> 1 -> M, A || M -> M
 void ANC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void RLA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void SRE(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
