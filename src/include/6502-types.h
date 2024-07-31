@@ -1,7 +1,10 @@
+#ifndef C8014FEB_51B9_4C92_98BF_E7C5D92B2E36
+#define C8014FEB_51B9_4C92_98BF_E7C5D92B2E36
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 typedef signed char byte_raw;
 typedef unsigned char u_byte;
@@ -53,11 +56,10 @@ typedef enum ERROR_CODES
     ERR_SDL_WINDOW_ASSERTION_FAILED,
     ERR_SDL_RENDERER_ASSERTION_FAILED,
     ERR_SDL_TEXTURE_ASSERTION_FAILED,
+    ERR_BUFFER_OVERFLOW,
     ERR_TESTING_ERROR_CODE
 } ERROR_CODES;
 
-#if defined(_WIN32) || defined(_WIN64)
-
     typedef struct
     {
         byte_raw SR;
@@ -82,33 +84,23 @@ typedef enum ERROR_CODES
         int cycles;
         bool page_crossed_cycle_exception;
     } InstructionInfo;
-#elif defined(__linux__)
 
-    typedef struct __attribute__((packed, aligned(4)))
-    {
-        byte_raw SR;
-        u_byte A;
-        u_byte X, Y;
-        u_byte SP;
-        ushort PC;
-        byte_raw* mem;
+// TODO: Update implementation to have better error codes
 
-        byte_raw *f_stack;
-        byte_raw FSP;
-        __useconds_t microsecondsPerCycle;
-        bool quit;
-
-        ushort last_accessed_memory_location;
-    } cpu;
-
-
-    typedef struct __attribute__((packed, aligned(4)))
-    {
-        void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
-        AddressingModes mode;
-        int cycles;
-        bool page_crossed_cycle_exception;
-    } InstructionInfo;
-#else
-#error "Unsupported Platform"
-#endif
+static inline void FATAL_ERROR(ERROR_CODES code) {
+    switch (code) {
+        case ERR_UNSUPPORTED_ADDR_MODE:
+            fprintf(stderr, "Unsupported addr mode!\n");
+            exit(-1);
+            break;
+        case ERR_BUFFER_OVERFLOW:
+            fprintf(stderr, "Buffer overflow!\n");
+            exit(-1);
+            break;
+        default:
+            fprintf(stderr, "Unknown error!\n");
+            exit(-1);
+            break;
+    }
+}
+#endif /* C8014FEB_51B9_4C92_98BF_E7C5D92B2E36 */

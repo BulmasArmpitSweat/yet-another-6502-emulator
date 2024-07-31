@@ -1,9 +1,11 @@
-#pragma once
+#ifndef F1A031F9_7D08_46E4_A5A2_F45030213D8F
+#define F1A031F9_7D08_46E4_A5A2_F45030213D8F
+
 #include "../include/6502.h"
 
 #define CARRY                   (1 << 0)
 #define ZERO                    (1 << 1)
-#define INERRUPT_DISABLE        (1 << 2)
+#define INTERRUPT_DISABLE       (1 << 2)
 #define DECIMAL_MODE            (1 << 3)
 #define BRK_COMMAND             (1 << 4)
 /* Nothing                      (1 << 5) */
@@ -25,3 +27,4 @@ static inline void toggle_flag(cpu* cpu, const byte_raw flag) {
 static inline unsigned char set_bit(unsigned char d, char i) {
     return d | (1 << i);
 }
+#endif /* F1A031F9_7D08_46E4_A5A2_F45030213D8F */

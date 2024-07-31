@@ -1,4 +1,6 @@
-#pragma once
+#ifndef EA110649_F6F0_4D81_B2E3_117E21965C3A
+#define EA110649_F6F0_4D81_B2E3_117E21965C3A
+
 #include "../stack/stack.h"
 
 void LDA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // M → A
@@ -14,3 +16,4 @@ void SAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void SHA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // A & X & V → M
 void SHX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // X & (HI + 1) → M
 void SHY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Y & (H + 1) → M
+#endif /* EA110649_F6F0_4D81_B2E3_117E21965C3A */

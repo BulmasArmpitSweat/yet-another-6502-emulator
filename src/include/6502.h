@@ -1,3 +1,5 @@
+#ifndef EB4D9005_CF3A_40AB_8349_0F425DA6B566
+#define EB4D9005_CF3A_40AB_8349_0F425DA6B566
 #include "6502-types.h"
 
 /*
@@ -122,3 +124,4 @@ void ISC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void USBC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 
 void SHS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Transfer Accumulator "AND" Index Register X to Stack Pointer then Store Stack Pointer "AND" Hi-Byte In Memory
+#endif /* EB4D9005_CF3A_40AB_8349_0F425DA6B566 */
