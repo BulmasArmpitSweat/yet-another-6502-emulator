@@ -1,6 +1,7 @@
 #ifndef EB4D9005_CF3A_40AB_8349_0F425DA6B566
 #define EB4D9005_CF3A_40AB_8349_0F425DA6B566
 #include "6502-types.h"
+#include "../config.h"
 
 /*
     ------------------------------------------------------------------------------------------------------
@@ -92,6 +93,9 @@ void TXA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void TXS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Transfer index X to stack pointer
 void TYA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Transfer index Y to accumulator
 
+
+#if defined (INCLUDE_ILLEGAL_OPCODES)
+
 // --------------------------------------------------- //
 // ----------------- Illegal Opcodes ----------------- //
 // --------------------------------------------------- //
@@ -106,7 +110,7 @@ void SRE(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void ASR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void RRA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void ARR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
-void SAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
+void SAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // A & X -> M
 
 void XXA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void SHA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
@@ -114,9 +118,9 @@ void TAS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void SHY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 
 void SHX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
-void LAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
+void LAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // M -> A, X
 void LXA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
-void LAS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
+void LAS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // M & SP -> A, X, SP
 
 void DCP(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void SBX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
@@ -124,4 +128,5 @@ void ISC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void USBC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 
 void SHS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Transfer Accumulator "AND" Index Register X to Stack Pointer then Store Stack Pointer "AND" Hi-Byte In Memory
+#endif
 #endif /* EB4D9005_CF3A_40AB_8349_0F425DA6B566 */
