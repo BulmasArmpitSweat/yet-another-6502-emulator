@@ -1,6 +1,6 @@
 #ifndef B7C8AE76_51F7_4235_9EF8_88084D24D1FC
 #define B7C8AE76_51F7_4235_9EF8_88084D24D1FC
-#include "../include/6502.h"
+#include "../include/6502-types.h"
 
 static inline byte_raw GET_MEM_PC(cpu* cpu) {
     return cpu->mem[cpu->PC];

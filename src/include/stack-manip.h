@@ -1,5 +1,5 @@
 #pragma once
-#include "../../include/6502.h"
+#include "6502-types.h"
 
 #define FSP_CLAMP(value) ((value) < 0 ? 0 : ((value) > 5 ? 5 : (value)))
 

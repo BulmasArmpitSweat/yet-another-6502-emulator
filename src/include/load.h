@@ -1,9 +1,9 @@
 #ifndef EA110649_F6F0_4D81_B2E3_117E21965C3A
 #define EA110649_F6F0_4D81_B2E3_117E21965C3A
 
-#include "../stack/stack.h"
-#include "../../include/6502.h"
-#include "../../config.h"
+#include "stack-manip.h"
+#include "6502-types.h"
+#include "../config.h"
 
 void LDA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // M → A
 void LDX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // M → X

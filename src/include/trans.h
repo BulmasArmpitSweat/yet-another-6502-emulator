@@ -1,8 +1,8 @@
 #ifndef C705195C_34A5_4854_9099_6A3E93F99BAB
 #define C705195C_34A5_4854_9099_6A3E93F99BAB
 
-#include "../../include/6502.h"
-#include "../../config.h"
+#include "6502-types.h"
+#include "../config.h"
 
 void TAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void TAY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);

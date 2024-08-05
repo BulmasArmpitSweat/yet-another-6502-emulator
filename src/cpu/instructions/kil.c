@@ -1,4 +1,3 @@
-#include "kil.h"
 #include "../../include/6502.h"
 #include "../../config.h"
 

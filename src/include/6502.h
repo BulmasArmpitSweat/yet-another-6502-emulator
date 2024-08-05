@@ -1,3 +1,16 @@
+#include "load.h"
+#include "trans.h"
+#include "stack.h"
+#include "shift.h"
+#include "logic.h"
+#include "arith.h"
+#include "inc.h"
+#include "ctrl.h"
+#include "bra.h"
+#include "flags.h"
+#include "kil.h"
+#include "nop.h"
+
 #ifndef EB4D9005_CF3A_40AB_8349_0F425DA6B566
 #define EB4D9005_CF3A_40AB_8349_0F425DA6B566
 #include "6502-types.h"

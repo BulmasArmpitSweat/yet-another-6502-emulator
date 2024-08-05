@@ -1,7 +1,6 @@
-#include "trans.h"
 #include "../../include/6502.h"
 #include "../flags.h"
-#include "../stack/stack.h"
+#include "../../include/stack-manip.h"
 #include "../mem.h"
 #include "../../config.h"
 
@@ -15,7 +14,7 @@ void TAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }
     }
-    resolve_flags_NV(cpu, cpu->X);
+    resolve_flags_NZ(cpu, cpu->X);
 }
 
 void TAY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -28,7 +27,7 @@ void TAY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }
     }
-    resolve_flags_NV(cpu, cpu->Y);
+    resolve_flags_NZ(cpu, cpu->Y);
 }
 
 void TSX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -41,7 +40,7 @@ void TSX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }
     }
-    resolve_flags_NV(cpu, cpu->X);
+    resolve_flags_NZ(cpu, cpu->X);
 }
 
 void TXA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -54,7 +53,7 @@ void TXA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }
     }
-    resolve_flags_NV(cpu, cpu->A);
+    resolve_flags_NZ(cpu, cpu->A);
 }
 
 void TXS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -79,7 +78,7 @@ void TYA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }
     }
-    resolve_flags_NV(cpu, cpu->A);
+    resolve_flags_NZ(cpu, cpu->A);
 }
 
 #if defined (INCLUDE_ILLEGAL_OPCODES)

@@ -1,5 +1,6 @@
-#include "stack.h"
-#include "../../include/6502.h"
+#include "../../include/stack.h"
+#include "../../include/stack-manip.h"
+#include "../../include/6502-types.h"
 #include "../flags.h"
 
 void PHA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -34,7 +35,7 @@ void PLA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }
     }
-    resolve_flags_NV(cpu, cpu->A);
+    resolve_flags_NZ(cpu, cpu->A);
 }
 
 void PLP(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {

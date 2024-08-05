@@ -1,8 +1,8 @@
 #ifndef A3D95EF7_0C06_479E_8957_7656BAB4A8D9
 #define A3D95EF7_0C06_479E_8957_7656BAB4A8D9
 
-#include "../../include/6502.h"
-#include "../../config.h"
+#include "6502-types.h"
+#include "../config.h"
 
 #if defined (INCLUDE_ILLEGAL_OPCODES)
 

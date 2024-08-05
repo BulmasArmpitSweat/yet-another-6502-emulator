@@ -8,12 +8,16 @@
 
 typedef signed char byte_raw;
 typedef unsigned char u_byte;
-typedef bool bit;
 
 typedef unsigned int __useconds_t;
 typedef unsigned int uint;
 
 typedef unsigned short ushort;
+
+typedef struct foo
+{
+    unsigned x:1;
+} bit;
 
 typedef enum
 {

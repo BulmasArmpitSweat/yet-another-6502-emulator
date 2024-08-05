@@ -1,4 +1,3 @@
-#include "load.h"
 #include "../mem.h"
 #include "../../include/6502.h"
 #include "../flags.h"
@@ -51,7 +50,7 @@ void LDA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }
     }
-    resolve_flags_NV(cpu, cpu->A);
+    resolve_flags_NZ(cpu, cpu->A);
 }
 
 void LDX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -84,7 +83,7 @@ void LDX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }
     }
-    resolve_flags_NV(cpu, cpu->X);
+    resolve_flags_NZ(cpu, cpu->X);
 }
 
 void LDY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -118,7 +117,7 @@ void LDY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             break;
         }
     }
-    resolve_flags_NV(cpu, cpu->Y);
+    resolve_flags_NZ(cpu, cpu->Y);
 }
 
 void STA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -230,7 +229,7 @@ void LAS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
         }    
     }
-    resolve_flags_NV(cpu, cpu->A);
+    resolve_flags_NZ(cpu, cpu->A);
 }
 
 void LAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
@@ -290,7 +289,7 @@ void LAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             break;
         }
     }
-    resolve_flags_NV(cpu, cpu->A);
+    resolve_flags_NZ(cpu, cpu->A);
 }
 
 void SAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
