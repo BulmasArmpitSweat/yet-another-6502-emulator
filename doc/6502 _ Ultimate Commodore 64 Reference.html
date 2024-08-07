@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+<title>6502 | Ultimate Commodore 64 Reference</title>
+<link rel="stylesheet" href="6502%20_%20Ultimate%20Commodore%2064%20Reference_files/style.css">
+<script src="6502%20_%20Ultimate%20Commodore%2064%20Reference_files/script.js"></script>
+<style>
+
+:root {
+	--box-background: #eef;
+	--box-border: gray;
+}
+
+input#tab0,
+input#tab1,
+input#tab2,
+input#tab3,
+input#tab4 {
+	display: none;
+}
+
+div#navigation {
+	border-bottom: 1px solid black;
+	margin-bottom: 10px;
+}
+
+#navigation nav {
+	margin-bottom: 0rem;
+}
+
+nav label {
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-top: 1px solid var(--box-border);
+	border-right: 1px solid var(--box-border);
+	background: hsl(210,0%,70%);
+	color: hsl(210,0%,30%);
+	text-align: center;
+	font-size: 11pt;
+}
+
+nav label:nth-child(1) { border-left: 1px solid var(--box-border); }
+nav label:hover {
+	background: hsl(210, 0%, 60%);
+	color: black;
+}
+nav label:active {
+	background: hsl(210, 0%, 80%);
+	color: black;
+}
+
+#tab0:checked ~ div nav label[for="tab0"],
+#tab1:checked ~ div nav label[for="tab1"],
+#tab2:checked ~ div nav label[for="tab2"],
+#tab3:checked ~ div nav label[for="tab3"],
+#tab4:checked ~ div nav label[for="tab4"] {
+	background: var(--main-background);
+	color: black;
+	position: relative;
+	border-bottom: none;
+	font-weight: bold;
+}
+
+#tab0:checked ~ div nav label[for="tab0"]:after,
+#tab1:checked ~ div nav label[for="tab1"]:after,
+#tab2:checked ~ div nav label[for="tab2"]:after,
+#tab3:checked ~ div nav label[for="tab3"]:after,
+#tab4:checked ~ div nav label[for="tab4"]:after {
+	content: "";
+	display: block;
+	position: absolute;
+	height: 3px;
+	width: 100%;
+	background: var(--main-background);
+	left: 0;
+	bottom: -2px;
+}
+
+h2 {
+	font-size: large;
+}
+
+h3 {
+	font-size: medium;
+}
+
+.reference_card {
+	border-radius: 10px;
+	border: 1px solid black;
+	box-shadow: 2px 2px 10px gray;
+	background-color: white;
+	margin: 10px;
+	padding: 8px 22px;
+	width: 700px;
+	font-size: 11pt;
+}
+
+.reference_card_addmode {
+	border-radius: 10px;
+	border: 1px solid black;
+	box-shadow: 2px 2px 10px gray;
+	background-color: white;
+	margin: 10px;
+	padding: 8px 22px;
+	width: 350px;
+	font-size: 11pt;
+}
+
+.reference_table td,
+.reference_table th {
+	padding: 1px 10px;
+	vertical-align: middle;
+}
+
+.reference_table th {
+	padding: 5px 10px;
+}
+
+.reference_table {
+	width: 100%;
+}
+
+.reference_flags_table {
+	float: right;
+	margin: 16px 0px 10px 10px;
+	border: none;
+}
+
+
+.reference_flags_table tr  {
+    height: 1.5em;
+}
+
+
+.reference_flags_table th,
+.reference_flags_table td {
+	padding: 2px;
+	text-align: center;
+	vertical-align: middle;
+    width: 1.5em;
+	border-right: 1px solid gray;
+}
+
+.reference_flags_table th:last-child,
+.reference_flags_table td:last-child {
+	border-right: none;
+}
+
+
+.reference_flags_table td {
+	border-top: 1px solid lightgray;
+}
+
+.opcode_table {
+	border: none;
+}
+
+.opcode_table td {
+	border: 1px solid white;
+	height: 40px;
+	width: 40px;
+	font-size: 7.5pt;
+	font-family: monospace;
+	/* text-shadow: 1px 0px 2px white; */
+}
+
+.opcode_table th {
+	font-size: 7.5pt;
+	font-family: monospace;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#mnemos_by_category table {
+	border: none;
+}
+
+#mnemos_by_category td {
+	padding: 2px;
+	font-size: 11pt;
+}
+
+#mnemos_by_category th {
+	text-align: center;
+}
+
+#cycle_reference {
+	font-size: 10pt;
+}
+
+#opcode_reference {
+	font-size: 10pt;
+}
+
+.big_table {
+	overflow: scroll;
+	border: none;
+}
+.big_table td,
+.big_table th {
+	vertical-align: top;
+}
+
+.big_table {
+	border: none;
+	font-size: 10pt;
+}
+
+.big_table th {
+	border-top: 0px;
+	border-left: 1px dotted gray;
+}
+
+.big_table th.rotate {
+	border: none;
+	vertical-align: bottom;
+	height: 210px;
+	white-space: nowrap;
+}
+
+.big_table th.rotate > div {
+	transform:
+		translate(2px, -1px)
+		rotate(290deg);
+	width: 30px;
+}
+
+.big_table th.rotate > div > span {
+	padding: 5px 16px;
+	border-top: 2px solid black;
+}
+
+
+.big_table td {
+	border-top: 1px dotted white;
+	border-left: 1px dotted gray;
+	padding: 1px 2px;
+}
+
+.big_table tr:nth-child(2n+3) {
+	background: #fff;
+}
+
+.big_table th.leading,
+.big_table td.leading {
+	border-left: 2px solid black;
+}
+
+.opcode,
+.cycles,
+.bytes,
+.flag {
+	text-align: center;
+}
+
+th.operation,
+td.operation {
+	white-space: nowrap;
+}
+
+th.opcode,
+td.opcode {
+	width: 2em;
+	background: #ccc5;
+}
+
+th.bytes,
+td.bytes {
+	width: 1em;
+	background: #ddd5;
+}
+
+th.cycles,
+td.cycles {
+	background: #eee5;
+}
+
+td.cycles {
+	width: 2em;
+	white-space: nowrap;
+}
+
+
+th.cycles.detailed,
+td.cycles.detailed {
+}
+
+th.flag,
+td.flag {
+	width: 1em;
+}
+
+.info_logo {
+	float: right;
+	max-height: 100px;
+	max-width: 200px;
+	top: 20px;
+	right: 20px;
+}
+
+.bug_box {
+	border: 1px solid red;
+	padding: 5px;
+}
+
+
+
+.disabled {
+	pointer-events: none;
+	opacity: 0.25;
+}
+
+.vertical {
+   writing-mode: vertical-rl;
+   transform:rotate(270deg);
+   margin: 0px;
+}
+.vertical:before {
+	content: '';
+	padding-top: 110%;/* takes width as reference, + 10% for faking some extra padding */
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.ill {
+	background: repeating-linear-gradient(
+		45deg,
+		rgba(0, 0, 0, 0),
+		rgba(0, 0, 0, 0) 2px,
+		rgba(0, 0, 0, 0.1) 2px,
+		rgba(0, 0, 0, 0.1) 4px
+	);
+}
+
+.ill_big {
+	background: repeating-linear-gradient(
+		45deg,
+		rgba(0, 0, 0, 0),
+		rgba(0, 0, 0, 0) 10px,
+		rgba(0, 0, 0, 0.05) 10px,
+		rgba(0, 0, 0, 0.05) 20px
+	);
+}
+
+.load { background-color: hsl(5, 100%, 80%); }
+.trans { background-color: hsl(340, 100%, 80%); }
+.stack { background-color: hsl(290, 100%, 80%); }
+.shift { background-color: hsl(220, 70%, 80%); }
+.logic { background-color: hsl(200, 70%, 80%); }
+.arith { background-color: hsl(130, 70%, 80%); }
+.inc { background-color: hsl(90, 70%, 80%); }
+.ctrl { background-color: hsl(55, 100%, 70%); }
+.bra { background-color: hsl(47, 100%, 70%); }
+.flags { background-color: hsl(39, 100%, 70%); }
+.kil { background-color: hsl(0, 0%, 20%); color: white; }
+.nop { background-color: hsl(0, 0%, 75%); }
+.undefined { background-color: hsl(0, 0%, 90%); }
+
+.load_light { background-color: hsl(5, 100%, 95%); }
+.trans_light { background-color: hsl(340, 100%, 95%); }
+.stack_light { background-color: hsl(290, 100%, 95%); }
+.shift_light { background-color: hsl(220, 70%, 95%); }
+.logic_light { background-color: hsl(200, 70%, 95%); }
+.arith_light { background-color: hsl(130, 70%, 95%); }
+.inc_light { background-color: hsl(90, 70%, 95%); }
+.ctrl_light { background-color: hsl(55, 100%, 92.5%); }
+.bra_light { background-color: hsl(47, 100%, 92.5%); }
+.flags_light { background-color: hsl(39, 100%, 92.5%); }
+.kil_light { background-color: hsl(0, 0%, 70%); }
+.nop_light { background-color: hsl(0, 0%, 93.75%); }
+.undefined_light { background-color: hsl(0, 0%, 97.5%); }
+
+/* https://stackoverflow.com/questions/34610932/tree-like-structure-for-nested-ul-lis */
+/*
+* {margin: 0; padding: 0; list-style: none;}
+ul li {
+  margin-left: 15px;
+  position: relative;
+  padding-left: 5px;
+}
+ul li::before {
+  content: " ";
+  position: absolute;
+  width: 1px;
+  background-color: #000;
+  top: 5px;
+  bottom: -12px;
+  left: -10px;
+}
+body > ul > li:first-child::before {top: 12px;}
+ul li:not(:first-child):last-child::before {display: none;}
+ul li:only-child::before {
+  display: list-item;
+  content: " ";
+  position: absolute;
+  width: 1px;
+  background-color: #000;
+  top: 5px;
+  bottom: 7px;
+  height: 7px;
+  left: -10px;
+}
+ul li::after {
+  content: " ";
+  position: absolute;
+  left: -10px;
+  width: 10px;
+  height: 1px;
+  background-color: #000;
+  top: 12px;
+}
+*/
+
+.selected_cpu {
+	background-color: red;
+}
+
+
+
+#legend {
+	margin: 4px;
+}
+
+.legend {
+	font-size: 9pt;
+	border: 0px solid black;
+}
+
+.legend tr {
+	display: inline;
+}
+
+.legend td {
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid black;
+}
+
+</style>
+
+</head>
+
+<body>
+
+  <header>
+    <div id="cat">
+     <a href="https://github.com/mist64/c64ref" class="github-corner" aria-label="View source on GitHub">
+      <svg width="80" height="80" viewBox="0 0 250 250" style="fill:var(--main-color); color:#fff; position: absolute; top: 0; border: 0; right: 0; clip-path: polygon(0 0, 100% 0, 100% 100%);" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path>
+      </svg>
+     </a>
+	</div>
+
+    <nav class="topnav">
+      <div>Ultimate Commodore 64 Reference</div>
+      <a class="active" href="#">6502</a>
+      <a href="https://www.pagetable.com/c64ref/kernal/">KERNAL API</a>
+      <a href="https://www.pagetable.com/c64ref/c64disasm/">ROM Disassembly</a>
+      <a href="https://www.pagetable.com/c64ref/c64mem/">Memory Map</a>
+      <a href="https://www.pagetable.com/c64ref/charset/">Charset · PETSCII · Keyboard</a>
+      <a class="home" href="https://www.pagetable.com/">pagetable.com</a>
+    </nav>
+
+    <h1 id="headline">6502 Family CPU Reference</h1>
+    <p id="byline">by <em><a href="http://www.pagetable.com/">Michael Steil</a>.</em> [<small><a href="https://github.com/mist64/c64ref">github.com/mist64/c64ref</a>, rev e906f4a, 2024-07-09</small>]</p>
+  </header>
+  
+	<main>
+	<div>
+	<p>
+		<label for="cpu">CPU</label>
+		<select name="cpu" id="cpu" onchange="show();"><option value="6502" selected="selected">MOS 6502</option><option value="6502rorbug">MOS 6502 (without ROR)</option><option value="65dtv02">65DTV02</option><option value="65c02">WDC 65C02</option><option value="r65c02">Rockwell R65C02</option><option value="65c02s">WDC 65C02S</option><option value="65ce02">CSG 65CE02</option><option value="65c816">WDC 65C816</option></select>
+		<span id="showillegal_box">
+			<input type="checkbox" id="showillegal" onclick="show()" checked="checked">
+			<label for="showillegal">Undocumented opcodes</label>
+			<span id="separateillegal_box" class="">
+				<input type="checkbox" id="separateillegal" onclick="show()">
+				<label for="separateillegal">Separate</label>
+			</span>
+		</span>
+	</p>
+
+<!--	<div id="tree"></div> -->
+
+	<input id="tab0" type="radio" name="tabs" onchange="show();">
+	<input id="tab1" type="radio" name="tabs" onchange="show();">
+	<input id="tab2" type="radio" name="tabs" onchange="show();" checked="checked">
+	<input id="tab3" type="radio" name="tabs" onchange="show();">
+	<input id="tab4" type="radio" name="tabs" onchange="show();">
+
+	<div id="navigation">
+		<nav>
+			<label for="tab0">Info</label><!--
+			--><label for="tab1">Opcodes</label><!--
+			--><label for="tab2">Instructions</label><!--
+			--><label for="tab3">Addressing Modes</label><!--
+			--><label for="tab4">Table</label>
+		</nav>
+	</div>
+
+	<div id="tab0c" style="display: none;">
+		<div id="info_div"></div>
+		<div id="registers_div"></div>
+		<div id="flags_div"></div>
+		<div id="vectors_div"></div>
+	</div>
+
+	<div id="tab1c" style="display: none;">
+		<p>
+			<label for="opcode_table_organization">Organization</label>
+			<select name="opcode_table_organization" id="opcode_table_organization" onchange="show();">
+				<option value="4-4" selected="selected">4-4</option>
+				<option value="3-3-2/h">3-3-2</option>
+<!--				<option value="3-3-2/h">3-3-2 (horizontal)</option>
+				<option value="3-3-2/v">3-3-2 (vertical)</option>-->
+			</select>
+		</p>
+
+		<div id="opcode_div1"></div>
+		<div id="opcode_div2"></div>
+	</div>
+
+	<div id="tab2c">
+		<div id="mnemos_by_category"><table><tr><th>load</th><th>trans</th><th>stack</th><th>shift</th><th>logic</th><th>arith</th><th>inc</th><th>ctrl</th><th>bra</th><th>flags</th><th>kil</th><th>nop</th></tr><tr><td class="load"><a href="#LAS">LAS<br></a></td><td class="trans"><a href="#SHS">SHS<br></a></td><td class="stack"><a href="#PHA">PHA<br></a></td><td class="shift"><a href="#ASL">ASL<br></a></td><td class="logic"><a href="#AND">AND<br></a></td><td class="arith"><a href="#ADC">ADC<br></a></td><td class="inc"><a href="#DEC">DEC<br></a></td><td class="ctrl"><a href="#BRK">BRK<br></a></td><td class="bra"><a href="#BCC">BCC<br></a></td><td class="flags"><a href="#CLC">CLC<br></a></td><td class="kil"><a href="#JAM">JAM<br></a></td><td class="nop"><a href="#NOP">NOP<br></a></td></tr><tr><td class="load"><a href="#LAX">LAX<br></a></td><td class="trans"><a href="#TAX">TAX<br></a></td><td class="stack"><a href="#PHP">PHP<br></a></td><td class="shift"><a href="#LSR">LSR<br></a></td><td class="logic"><a href="#BIT">BIT<br></a></td><td class="arith"><a href="#ANC">ANC<br></a></td><td class="inc"><a href="#DEX">DEX<br></a></td><td class="ctrl"><a href="#JMP">JMP<br></a></td><td class="bra"><a href="#BCS">BCS<br></a></td><td class="flags"><a href="#CLD">CLD<br></a></td><td></td><td></td></tr><tr><td class="load"><a href="#LDA">LDA<br></a></td><td class="trans"><a href="#TAY">TAY<br></a></td><td class="stack"><a href="#PLA">PLA<br></a></td><td class="shift"><a href="#ROL">ROL<br></a></td><td class="logic"><a href="#EOR">EOR<br></a></td><td class="arith"><a href="#ARR">ARR<br></a></td><td class="inc"><a href="#DEY">DEY<br></a></td><td class="ctrl"><a href="#JSR">JSR<br></a></td><td class="bra"><a href="#BEQ">BEQ<br></a></td><td class="flags"><a href="#CLI">CLI<br></a></td><td></td><td></td></tr><tr><td class="load"><a href="#LDX">LDX<br></a></td><td class="trans"><a href="#TSX">TSX<br></a></td><td class="stack"><a href="#PLP">PLP<br></a></td><td class="shift"><a href="#ROR">ROR<br></a></td><td class="logic"><a href="#ORA">ORA<br></a></td><td class="arith"><a href="#ASR">ASR<br></a></td><td class="inc"><a href="#INC">INC<br></a></td><td class="ctrl"><a href="#RTI">RTI<br></a></td><td class="bra"><a href="#BMI">BMI<br></a></td><td class="flags"><a href="#CLV">CLV<br></a></td><td></td><td></td></tr><tr><td class="load"><a href="#LDY">LDY<br></a></td><td class="trans"><a href="#TXA">TXA<br></a></td><td></td><td></td><td></td><td class="arith"><a href="#CMP">CMP<br></a></td><td class="inc"><a href="#INX">INX<br></a></td><td class="ctrl"><a href="#RTS">RTS<br></a></td><td class="bra"><a href="#BNE">BNE<br></a></td><td class="flags"><a href="#SEC">SEC<br></a></td><td></td><td></td></tr><tr><td class="load"><a href="#SAX">SAX<br></a></td><td class="trans"><a href="#TXS">TXS<br></a></td><td></td><td></td><td></td><td class="arith"><a href="#CPX">CPX<br></a></td><td class="inc"><a href="#INY">INY<br></a></td><td></td><td class="bra"><a href="#BPL">BPL<br></a></td><td class="flags"><a href="#SED">SED<br></a></td><td></td><td></td></tr><tr><td class="load"><a href="#SHA">SHA<br></a></td><td class="trans"><a href="#TYA">TYA<br></a></td><td></td><td></td><td></td><td class="arith"><a href="#CPY">CPY<br></a></td><td></td><td></td><td class="bra"><a href="#BVC">BVC<br></a></td><td class="flags"><a href="#SEI">SEI<br></a></td><td></td><td></td></tr><tr><td class="load"><a href="#SHX">SHX<br></a></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#DCP">DCP<br></a></td><td></td><td></td><td class="bra"><a href="#BVS">BVS<br></a></td><td></td><td></td><td></td></tr><tr><td class="load"><a href="#SHY">SHY<br></a></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#ISC">ISC<br></a></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="load"><a href="#STA">STA<br></a></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#RLA">RLA<br></a></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="load"><a href="#STX">STX<br></a></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#RRA">RRA<br></a></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td class="load"><a href="#STY">STY<br></a></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#SBC">SBC<br></a></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#SBX">SBX<br></a></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#SLO">SLO<br></a></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#SRE">SRE<br></a></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td class="arith"><a href="#XAA">XAA<br></a></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table></div>
+		<input type="checkbox" id="sortbycat2" onclick="show()" checked="checked">
+		<label for="sortbycat2">Sort by Category</label>
+		<div id="reference1"><div id="LAS" class="reference_card load_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>LAS - "AND" Memory with Stack Pointer</h2><p><b>Operation</b>: M ∧ S → A, X, S<br></p><p>This
+ undocumented instruction performs a bit-by-bit "AND" operation of the 
+stack pointer and memory and stores the result back in the accumulator, 
+the index register X and the stack pointer.</p><p>The LAS instruction 
+does not affect the carry or overflow flags. It sets N if the bit 7 of 
+the result is on, otherwise it is reset. If the result is zero, then the
+ Z flag is set, otherwise it is reset.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">LAS $nnnn,Y</td><td style="text-align: center;">$BB*</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr></table><p>*Undocumented.<br>p: =1 if page is crossed.<br></p></div><div id="LAX" class="reference_card load_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>LAX - Load Accumulator and Index Register X From Memory</h2><p><b>Operation</b>: M → A, X<br></p><p>The undocumented LAX instruction loads the accumulator and the index register X from memory.</p><p>LAX
+ does not affect the C or V flags; sets Z if the value loaded was zero, 
+otherwise resets it; sets N if the value loaded in bit 7 is a 1; 
+otherwise N is reset, and affects only the X register.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">LAX #$nn</td><td style="text-align: center;">$AB*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">LAX $nnnn</td><td style="text-align: center;">$AF*</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">LAX $nnnn,Y</td><td style="text-align: center;">$BF*</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">LAX $nn</td><td style="text-align: center;">$A7*</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,Y" onclick="navigateTo('6502', 3, 'a8,Y');">Y-Indexed Zero Page</a></td><td style="font-family: monospace;">LAX $nn,Y</td><td style="text-align: center;">$B7*</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">LAX ($nn,X)</td><td style="text-align: center;">$A3*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">LAX ($nn),Y</td><td style="text-align: center;">$B3*</td><td style="text-align: center;">2</td><td style="text-align: center;">5+p</td></tr></table><p>*Undocumented.<br>p: =1 if page is crossed.<br></p></div><div id="LDA" class="reference_card load_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>LDA - Load Accumulator with Memory</h2><p><b>Operation</b>: M → A<br></p><p>When
+ instruction LDA is executed by the microprocessor, data is transferred 
+from memory to the accumulator and stored in the accumulator.</p><p>LDA 
+affects the contents of the accumulator, does not affect the carry or 
+overflow flags; sets the zero flag if the accumulator is zero as a 
+result of the LDA, otherwise resets the zero flag; sets the negative 
+flag if bit 7 of the accumulator is a 1, other­ wise resets the negative
+ flag.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">LDA #$nn</td><td style="text-align: center;">$A9</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">LDA $nnnn</td><td style="text-align: center;">$AD</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">LDA $nnnn,X</td><td style="text-align: center;">$BD</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">LDA $nnnn,Y</td><td style="text-align: center;">$B9</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">LDA $nn</td><td style="text-align: center;">$A5</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">LDA $nn,X</td><td style="text-align: center;">$B5</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">LDA ($nn,X)</td><td style="text-align: center;">$A1</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">LDA ($nn),Y</td><td style="text-align: center;">$B1</td><td style="text-align: center;">2</td><td style="text-align: center;">5+p</td></tr></table><p>p: =1 if page is crossed.<br></p></div><div id="LDX" class="reference_card load_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>LDX - Load Index Register X From Memory</h2><p><b>Operation</b>: M → X<br></p><p>Load the index register X from memory.</p><p>LDX
+ does not affect the C or V flags; sets Z if the value loaded was zero, 
+otherwise resets it; sets N if the value loaded in bit 7 is a 1; 
+otherwise N is reset, and affects only the X register.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">LDX #$nn</td><td style="text-align: center;">$A2</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">LDX $nnnn</td><td style="text-align: center;">$AE</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">LDX $nnnn,Y</td><td style="text-align: center;">$BE</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">LDX $nn</td><td style="text-align: center;">$A6</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,Y" onclick="navigateTo('6502', 3, 'a8,Y');">Y-Indexed Zero Page</a></td><td style="font-family: monospace;">LDX $nn,Y</td><td style="text-align: center;">$B6</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr></table><p>p: =1 if page is crossed.<br></p></div><div id="LDY" class="reference_card load_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>LDY - Load Index Register Y From Memory</h2><p><b>Operation</b>: M → Y<br></p><p>Load the index register Y from memory.</p><p>LDY
+ does not affect the C or V flags, sets the N flag if the value loaded 
+in bit 7 is a 1, otherwise resets N, sets Z flag if the loaded value is 
+zero otherwise resets Z and only affects the Y register.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">LDY #$nn</td><td style="text-align: center;">$A0</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">LDY $nnnn</td><td style="text-align: center;">$AC</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">LDY $nnnn,X</td><td style="text-align: center;">$BC</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">LDY $nn</td><td style="text-align: center;">$A4</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">LDY $nn,X</td><td style="text-align: center;">$B4</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr></table><p>p: =1 if page is crossed.<br></p></div><div id="SAX" class="reference_card load_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>SAX - Store Accumulator "AND" Index Register X in Memory</h2><p><b>Operation</b>: A ∧ X → M<br></p><p>The
+ undocumented SAX instruction performs a bit-by-bit AND operation of the
+ value of the accumulator and the value of the index register X and 
+stores the result in memory.</p><p>No flags or registers in the microprocessor are affected by the store operation.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">SAX $nnnn</td><td style="text-align: center;">$8F*</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">SAX $nn</td><td style="text-align: center;">$87*</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,Y" onclick="navigateTo('6502', 3, 'a8,Y');">Y-Indexed Zero Page</a></td><td style="font-family: monospace;">SAX $nn,Y</td><td style="text-align: center;">$97*</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">SAX ($nn,X)</td><td style="text-align: center;">$83*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p>*Undocumented.<br></p></div><div id="SHA" class="reference_card load_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>SHA - Store Accumulator "AND" Index Register X "AND" Value</h2><p><b>Operation</b>: A ∧ X ∧ V → M<br></p><p>The
+ undocumented SHA instruction performs a bit-by-bit AND operation of the
+ following three operands: The first two are the accumulator and the 
+index register X.</p><p>The third operand depends on the addressing 
+mode. In the zero page indirect Y-indexed case, the third operand is the
+ data in memory at the given zero page address (ignoring the addressing 
+mode's Y offset) plus 1. In the Y-indexed absolute case, it is the upper
+ 8 bits of the given address (ignoring the addressing mode's Y offset), 
+plus 1.</p><p>It then transfers the result to the addressed memory location.</p><p>No flags or registers in the microprocessor are affected by the store operation.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">SHA $nnnn,Y</td><td style="text-align: center;">$9F*</td><td style="text-align: center;">3</td><td style="text-align: center;">5</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">SHA ($nn),Y</td><td style="text-align: center;">$93*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p>*Undocumented.<br></p></div><div id="SHX" class="reference_card load_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>SHX - Store Index Register X "AND" Value</h2><p><b>Operation</b>: X ∧ (H + 1) → M<br></p><p>The
+ undocumented SHX instruction performs a bit-by-bit AND operation of the
+ index register X and the upper 8 bits of the given address (ignoring 
+the addressing mode's Y offset), plus 1. It then transfers the result to
+ the addressed memory location.</p><p>No flags or registers in the microprocessor are affected by the store operation.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">SHX $nnnn,Y</td><td style="text-align: center;">$9E*</td><td style="text-align: center;">3</td><td style="text-align: center;">5</td></tr></table><p>*Undocumented.<br></p></div><div id="SHY" class="reference_card load_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>SHY - Store Index Register Y "AND" Value</h2><p><b>Operation</b>: Y ∧ (H + 1) → M<br></p><p>The
+ undocumented SHY instruction performs a bit-by-bit AND operation of the
+ index register Y and the upper 8 bits of the given address (ignoring 
+the addressing mode's X offset), plus 1. It then transfers the result to
+ the addressed memory location.</p><p>No flags or registers in the microprocessor are affected by the store operation.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">SHY $nnnn,X</td><td style="text-align: center;">$9C*</td><td style="text-align: center;">3</td><td style="text-align: center;">5</td></tr></table><p>*Undocumented.<br></p></div><div id="STA" class="reference_card load_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>STA - Store Accumulator in Memory</h2><p><b>Operation</b>: A → M<br></p><p>This instruction transfers the contents of the accumulator to memory.</p><p>This instruction affects none of the flags in the processor status register and does not affect the accumulator.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">STA $nnnn</td><td style="text-align: center;">$8D</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">STA $nnnn,X</td><td style="text-align: center;">$9D</td><td style="text-align: center;">3</td><td style="text-align: center;">5</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">STA $nnnn,Y</td><td style="text-align: center;">$99</td><td style="text-align: center;">3</td><td style="text-align: center;">5</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">STA $nn</td><td style="text-align: center;">$85</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">STA $nn,X</td><td style="text-align: center;">$95</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">STA ($nn,X)</td><td style="text-align: center;">$81</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">STA ($nn),Y</td><td style="text-align: center;">$91</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="STX" class="reference_card load_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>STX - Store Index Register X In Memory</h2><p><b>Operation</b>: X → M<br></p><p>Transfers value of X register to addressed memory location.</p><p>No flags or registers in the microprocessor are affected by the store operation.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">STX $nnnn</td><td style="text-align: center;">$8E</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">STX $nn</td><td style="text-align: center;">$86</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,Y" onclick="navigateTo('6502', 3, 'a8,Y');">Y-Indexed Zero Page</a></td><td style="font-family: monospace;">STX $nn,Y</td><td style="text-align: center;">$96</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr></table><p></p></div><div id="STY" class="reference_card load_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>STY - Store Index Register Y In Memory</h2><p><b>Operation</b>: Y → M<br></p><p>Transfer the value of the Y register to the addressed memory location.</p><p>STY does not affect any flags or registers in the microprocessor.</p><table class="reference_table"><tr><th class="load">Addressing Mode</th><th class="load">Assembly Language Form</th><th class="load">Opcode</th><th class="load">No. Bytes</th><th class="load">No. Cycles</th></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">STY $nnnn</td><td style="text-align: center;">$8C</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">STY $nn</td><td style="text-align: center;">$84</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="load_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">STY $nn,X</td><td style="text-align: center;">$94</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr></table><p></p></div><div id="SHS" class="reference_card trans_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>SHS - Transfer Accumulator "AND" Index Register X to Stack Pointer then Store Stack Pointer "AND" Hi-Byte In Memory</h2><p><b>Operation</b>: A ∧ X → S, S ∧ (H + 1) → M<br></p><p>The
+ undocumented SHS instruction performs a bit-by-bit AND operation of the
+ value of the accumulator and the value of the index register X and 
+stores the result in the stack pointer. It then performs a bit-by-bit 
+AND operation of the resulting stack pointer and the upper 8 bits of the
+ given address (ignoring the addressing mode's Y offset), plus 1, and 
+transfers the result to the addressed memory location.</p><p>No flags or registers in the microprocessor are affected by the store operation.</p><table class="reference_table"><tr><th class="trans">Addressing Mode</th><th class="trans">Assembly Language Form</th><th class="trans">Opcode</th><th class="trans">No. Bytes</th><th class="trans">No. Cycles</th></tr><tr class="trans_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">SHS $nnnn,Y</td><td style="text-align: center;">$9B*</td><td style="text-align: center;">3</td><td style="text-align: center;">5</td></tr></table><p>*Undocumented.<br></p></div><div id="TAX" class="reference_card trans_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>TAX - Transfer Accumulator To Index X</h2><p><b>Operation</b>: A → X<br></p><p>This
+ instruction takes the value from accumulator A and trans­ fers or loads
+ it into the index register X without disturbing the content of the 
+accumulator A.</p><p>TAX only affects the index register X, does not 
+affect the carry or overflow flags. The N flag is set if the resultant 
+value in the index register X has bit 7 on, otherwise N is reset. The Z 
+bit is set if the content of the register X is 0 as aresult of theopera­
+ tion, otherwise it is reset.</p><table class="reference_table"><tr><th class="trans">Addressing Mode</th><th class="trans">Assembly Language Form</th><th class="trans">Opcode</th><th class="trans">No. Bytes</th><th class="trans">No. Cycles</th></tr><tr class="trans_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">TAX </td><td style="text-align: center;">$AA</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="TAY" class="reference_card trans_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>TAY - Transfer Accumula Tor To Index Y</h2><p><b>Operation</b>: A → Y<br></p><p>This instruction moves the value of the accumulator into index register Y without affecting the accumulator.</p><p>TAY
+ instruction only affects the Y register and does not affect either the 
+carry or overflow flags. If the index register Y has bit 7 on, then N is
+ set, otherwise it is reset. If the content of the index register Y 
+equals 0 as a result of the operation, Z is set on, otherwise it is 
+reset.</p><table class="reference_table"><tr><th class="trans">Addressing Mode</th><th class="trans">Assembly Language Form</th><th class="trans">Opcode</th><th class="trans">No. Bytes</th><th class="trans">No. Cycles</th></tr><tr class="trans_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">TAY </td><td style="text-align: center;">$A8</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="TSX" class="reference_card trans_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>TSX - Transfer Stack Pointer To Index X</h2><p><b>Operation</b>: S → X<br></p><p>This instruction transfers the value in the stack pointer to the index register X.</p><p>TSX
+ does not affect the carry or overflow flags. It sets N if bit 7 is on 
+in index X as a result of the instruction, otherwise it is reset. If 
+index X is zero as a result of the TSX, the Z flag is set, other­ wise 
+it is reset. TSX changes the value of index X, making it equal to the 
+content of the stack pointer.</p><table class="reference_table"><tr><th class="trans">Addressing Mode</th><th class="trans">Assembly Language Form</th><th class="trans">Opcode</th><th class="trans">No. Bytes</th><th class="trans">No. Cycles</th></tr><tr class="trans_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">TSX </td><td style="text-align: center;">$BA</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="TXA" class="reference_card trans_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>TXA - Transfer Index X To Accumulator</h2><p><b>Operation</b>: X → A<br></p><p>This
+ instruction moves the value that is in the index register X to the 
+accumulator A without disturbing the content of the index register X.</p><p>TXA
+ does not affect any register other than the accumula­tor and does not 
+affect the carry or overflow flag. If the result in A has bit 7 on, then
+ the N flag is set, otherwise it is reset. If the resultant value in the
+ accumulator is 0, then the Z flag is set, other­ wise it is reset.</p><table class="reference_table"><tr><th class="trans">Addressing Mode</th><th class="trans">Assembly Language Form</th><th class="trans">Opcode</th><th class="trans">No. Bytes</th><th class="trans">No. Cycles</th></tr><tr class="trans_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">TXA </td><td style="text-align: center;">$8A</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="TXS" class="reference_card trans_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>TXS - Transfer Index X To Stack Pointer</h2><p><b>Operation</b>: X → S<br></p><p>This instruction transfers the value in the index register X to the stack pointer.</p><p>TXS changes only the stack pointer, making it equal to the content of the index register X. It does not affect any of the flags.</p><table class="reference_table"><tr><th class="trans">Addressing Mode</th><th class="trans">Assembly Language Form</th><th class="trans">Opcode</th><th class="trans">No. Bytes</th><th class="trans">No. Cycles</th></tr><tr class="trans_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">TXS </td><td style="text-align: center;">$9A</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="TYA" class="reference_card trans_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>TYA - Transfer Index Y To Accumulator</h2><p><b>Operation</b>: Y → A<br></p><p>This
+ instruction moves the value that is in the index register Y to 
+accumulator A without disturbing the content of the register Y.</p><p>TYA
+ does not affect any other register other than the accumula­ tor and 
+does not affect the carry or overflow flag. If the result in the 
+accumulator A has bit 7 on, the N flag is set, otherwise it is reset. If
+ the resultant value in the accumulator A is 0, then the Z flag is set, 
+otherwise it is reset.</p><table class="reference_table"><tr><th class="trans">Addressing Mode</th><th class="trans">Assembly Language Form</th><th class="trans">Opcode</th><th class="trans">No. Bytes</th><th class="trans">No. Cycles</th></tr><tr class="trans_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">TYA </td><td style="text-align: center;">$98</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="PHA" class="reference_card stack_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>PHA - Push Accumulator On Stack</h2><p><b>Operation</b>: A↓<br></p><p>This
+ instruction transfers the current value of the accumulator to the next 
+location on the stack, automatically decrementing the stack to point to 
+the next empty location.</p><p>The Push A instruction only affects the 
+stack pointer register which is decremented by 1 as a result of the 
+operation. It affects no flags.</p><table class="reference_table"><tr><th class="stack">Addressing Mode</th><th class="stack">Assembly Language Form</th><th class="stack">Opcode</th><th class="stack">No. Bytes</th><th class="stack">No. Cycles</th></tr><tr class="stack_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">PHA </td><td style="text-align: center;">$48</td><td style="text-align: center;">1</td><td style="text-align: center;">3</td></tr></table><p></p></div><div id="PHP" class="reference_card stack_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>PHP - Push Processor Status On Stack</h2><p><b>Operation</b>: P↓<br></p><p>This
+ instruction transfers the contents of the processor status reg­ ister 
+unchanged to the stack, as governed by the stack pointer.</p><p>The PHP instruction affects no registers or flags in the micropro­cessor.</p><table class="reference_table"><tr><th class="stack">Addressing Mode</th><th class="stack">Assembly Language Form</th><th class="stack">Opcode</th><th class="stack">No. Bytes</th><th class="stack">No. Cycles</th></tr><tr class="stack_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">PHP </td><td style="text-align: center;">$08</td><td style="text-align: center;">1</td><td style="text-align: center;">3</td></tr></table><p></p></div><div id="PLA" class="reference_card stack_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>PLA - Pull Accumulator From Stack</h2><p><b>Operation</b>: A↑<br></p><p>This
+ instruction adds 1 to the current value of the stack pointer and uses 
+it to address the stack and loads the contents of the stack into the A 
+register.</p><p>The PLA instruction does not affect the carry or 
+overflow flags. It sets N if the bit 7 is on in accumulator A as a 
+result of instructions, otherwise it is reset. If accumulator A is zero 
+as a result of the PLA, then the Z flag is set, otherwise it is reset. 
+The PLA instruction changes content of the accumulator A to the contents
+ of the memory location at stack register plus 1 and also increments the
+ stack register.</p><table class="reference_table"><tr><th class="stack">Addressing Mode</th><th class="stack">Assembly Language Form</th><th class="stack">Opcode</th><th class="stack">No. Bytes</th><th class="stack">No. Cycles</th></tr><tr class="stack_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">PLA </td><td style="text-align: center;">$68</td><td style="text-align: center;">1</td><td style="text-align: center;">4</td></tr></table><p></p></div><div id="PLP" class="reference_card stack_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>✓</td><td>-</td><td>-</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr></table><h2>PLP - Pull Processor Status From Stack</h2><p><b>Operation</b>: P↑<br></p><p>This
+ instruction transfers the next value on the stack to the Proces­ sor 
+Status register, thereby changing all of the flags and setting the mode 
+switches to the values from the stack.</p><p>The PLP instruction affects
+ no registers in the processor other than the status register. This 
+instruction could affect all flags in the status register.</p><table class="reference_table"><tr><th class="stack">Addressing Mode</th><th class="stack">Assembly Language Form</th><th class="stack">Opcode</th><th class="stack">No. Bytes</th><th class="stack">No. Cycles</th></tr><tr class="stack_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">PLP </td><td style="text-align: center;">$28</td><td style="text-align: center;">1</td><td style="text-align: center;">4</td></tr></table><p></p></div><div id="ASL" class="reference_card shift_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>ASL - Arithmetic Shift Left</h2><p><b>Operation</b>: C ← /M<sub>7</sub>...M<sub>0</sub>/ ← 0<br></p><p>The
+ shift left instruction shifts either the accumulator or the address 
+memory location 1 bit to the left, with the bit 0 always being set to 0 
+and the input bit 7 being stored in the carry flag. ASL either shifts 
+the accumulator left 1 bit or is a read/modify/write instruction that 
+affects only memory.</p><p>The instruction does not affect the overflow 
+bit, sets N equal to the result bit 7 (bit 6 in the input), sets Z flag 
+if the result is equal to 0, otherwise resets Z and stores the input bit
+ 7 in the carry flag.</p><table class="reference_table"><tr><th class="shift">Addressing Mode</th><th class="shift">Assembly Language Form</th><th class="shift">Opcode</th><th class="shift">No. Bytes</th><th class="shift">No. Cycles</th></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#A" onclick="navigateTo('6502', 3, 'A');">Accumulator</a></td><td style="font-family: monospace;">ASL A</td><td style="text-align: center;">$0A</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">ASL $nnnn</td><td style="text-align: center;">$0E</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">ASL $nnnn,X</td><td style="text-align: center;">$1E</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">ASL $nn</td><td style="text-align: center;">$06</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">ASL $nn,X</td><td style="text-align: center;">$16</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="LSR" class="reference_card shift_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>0</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>LSR - Logical Shift Right</h2><p><b>Operation</b>: 0 → /M<sub>7</sub>...M<sub>0</sub>/ → C<br></p><p>This
+ instruction shifts either the accumulator or a specified memory 
+location 1 bit to the right, with the higher bit of the result always 
+being set to 0, and the low bit which is shifted out of the field being 
+stored in the carry flag.</p><p>The shift right instruction either 
+affects the accumulator by shift­ing it right 1 or is a 
+read/modify/write instruction which changes a speci­fied memory location
+ but does not affect any internal registers. The shift right does not 
+affect the overflow flag. The N flag is always reset. The Z flag is set 
+if the result of the shift is 0 and reset otherwise. The carry is set 
+equal to bit 0 of the input.</p><table class="reference_table"><tr><th class="shift">Addressing Mode</th><th class="shift">Assembly Language Form</th><th class="shift">Opcode</th><th class="shift">No. Bytes</th><th class="shift">No. Cycles</th></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#A" onclick="navigateTo('6502', 3, 'A');">Accumulator</a></td><td style="font-family: monospace;">LSR A</td><td style="text-align: center;">$4A</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">LSR $nnnn</td><td style="text-align: center;">$4E</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">LSR $nnnn,X</td><td style="text-align: center;">$5E</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">LSR $nn</td><td style="text-align: center;">$46</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">LSR $nn,X</td><td style="text-align: center;">$56</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="ROL" class="reference_card shift_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>ROL - Rotate Left</h2><p><b>Operation</b>: C ← /M<sub>7</sub>...M<sub>0</sub>/ ← C<br></p><p>The
+ rotate left instruction shifts either the accumulator or addressed 
+memory left 1 bit, with the input carry being stored in bit 0 and with 
+the input bit 7 being stored in the carry flags.</p><p>The ROL 
+instruction either shifts the accumulator left 1 bit and stores the 
+carry in accumulator bit 0 or does not affect the internal reg­isters at
+ all. The ROL instruction sets carry equal to the input bit 7, sets N 
+equal to the input bit 6 , sets the Z flag if the result of the ro­ tate
+ is 0, otherwise it resets Z and does not affect the overflow flag at 
+all.</p><table class="reference_table"><tr><th class="shift">Addressing Mode</th><th class="shift">Assembly Language Form</th><th class="shift">Opcode</th><th class="shift">No. Bytes</th><th class="shift">No. Cycles</th></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#A" onclick="navigateTo('6502', 3, 'A');">Accumulator</a></td><td style="font-family: monospace;">ROL A</td><td style="text-align: center;">$2A</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">ROL $nnnn</td><td style="text-align: center;">$2E</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">ROL $nnnn,X</td><td style="text-align: center;">$3E</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">ROL $nn</td><td style="text-align: center;">$26</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">ROL $nn,X</td><td style="text-align: center;">$36</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="ROR" class="reference_card shift_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>ROR - Rotate Right</h2><p><b>Operation</b>: C → /M<sub>7</sub>...M<sub>0</sub>/ → C<br></p><p>The
+ rotate right instruction shifts either the accumulator or addressed 
+memory right 1 bit with bit 0 shifted into the carry and carry shifted 
+into bit 7.</p><p>The ROR instruction either shifts the accumulator 
+right 1 bit and stores the carry in accumulator bit 7 or does not affect
+ the internal regis­ ters at all. The ROR instruction sets carry equal 
+to input bit 0, sets N equal to the input carry and sets the Z flag if 
+the result of the rotate is 0; otherwise it resets Z and does not affect
+ the overflow flag at all.</p><p>(Available on Microprocessors after June, 1976)</p><table class="reference_table"><tr><th class="shift">Addressing Mode</th><th class="shift">Assembly Language Form</th><th class="shift">Opcode</th><th class="shift">No. Bytes</th><th class="shift">No. Cycles</th></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#A" onclick="navigateTo('6502', 3, 'A');">Accumulator</a></td><td style="font-family: monospace;">ROR A</td><td style="text-align: center;">$6A</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">ROR $nnnn</td><td style="text-align: center;">$6E</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">ROR $nnnn,X</td><td style="text-align: center;">$7E</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">ROR $nn</td><td style="text-align: center;">$66</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="shift_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">ROR $nn,X</td><td style="text-align: center;">$76</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="AND" class="reference_card logic_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>AND - "AND" Memory with Accumulator</h2><p><b>Operation</b>: A ∧ M → A<br></p><p>The
+ AND instruction transfer the accumulator and memory to the adder which 
+performs a bit-by-bit AND operation and stores the result back in the 
+accumulator.</p><p>This instruction affects the accumulator; sets the 
+zero flag if the result in the accumulator is 0, otherwise resets the 
+zero flag; sets the negative flag if the result in the accumulator has 
+bit 7 on, otherwise resets the negative flag.</p><table class="reference_table"><tr><th class="logic">Addressing Mode</th><th class="logic">Assembly Language Form</th><th class="logic">Opcode</th><th class="logic">No. Bytes</th><th class="logic">No. Cycles</th></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">AND #$nn</td><td style="text-align: center;">$29</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">AND $nnnn</td><td style="text-align: center;">$2D</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">AND $nnnn,X</td><td style="text-align: center;">$3D</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">AND $nnnn,Y</td><td style="text-align: center;">$39</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">AND $nn</td><td style="text-align: center;">$25</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">AND $nn,X</td><td style="text-align: center;">$35</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">AND ($nn,X)</td><td style="text-align: center;">$21</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">AND ($nn),Y</td><td style="text-align: center;">$31</td><td style="text-align: center;">2</td><td style="text-align: center;">5+p</td></tr></table><p>p: =1 if page is crossed.<br></p></div><div id="BIT" class="reference_card logic_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>BIT - Test Bits in Memory with Accumulator</h2><p><b>Operation</b>: A ∧ M, M<sub>7</sub> → N, M<sub>6</sub> → V<br></p><p>This
+ instruction performs an AND between a memory location and the 
+accumulator but does not store the result of the AND into the 
+accumulator.</p><p>The bit instruction affects the N flag with N being 
+set to the value of bit 7 of the memory being tested, the V flag with V 
+being set equal to bit 6 of the memory being tested and Z being set by 
+the result of the AND operation between the accumulator and the memory 
+if the result is Zero, Z is reset otherwise. It does not affect the 
+accumulator.</p><table class="reference_table"><tr><th class="logic">Addressing Mode</th><th class="logic">Assembly Language Form</th><th class="logic">Opcode</th><th class="logic">No. Bytes</th><th class="logic">No. Cycles</th></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">BIT $nnnn</td><td style="text-align: center;">$2C</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">BIT $nn</td><td style="text-align: center;">$24</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr></table><p></p></div><div id="EOR" class="reference_card logic_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>EOR - "Exclusive OR" Memory with Accumulator</h2><p><b>Operation</b>: A ⊻ M → A<br></p><p>The
+ EOR instruction transfers the memory and the accumulator to the adder 
+which performs a binary "EXCLUSIVE OR" on a bit-by-bit basis and stores 
+the result in the accumulator.</p><p>This instruction affects the 
+accumulator; sets the zero flag if the result in the accumulator is 0, 
+otherwise resets the zero flag sets the negative flag if the result in 
+the accumulator has bit 7 on, otherwise resets the negative flag.</p><table class="reference_table"><tr><th class="logic">Addressing Mode</th><th class="logic">Assembly Language Form</th><th class="logic">Opcode</th><th class="logic">No. Bytes</th><th class="logic">No. Cycles</th></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">EOR #$nn</td><td style="text-align: center;">$49</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">EOR $nnnn</td><td style="text-align: center;">$4D</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">EOR $nnnn,X</td><td style="text-align: center;">$5D</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">EOR $nnnn,Y</td><td style="text-align: center;">$59</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">EOR $nn</td><td style="text-align: center;">$45</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">EOR $nn,X</td><td style="text-align: center;">$55</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">EOR ($nn,X)</td><td style="text-align: center;">$41</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">EOR ($nn),Y</td><td style="text-align: center;">$51</td><td style="text-align: center;">2</td><td style="text-align: center;">5+p</td></tr></table><p>p: =1 if page is crossed.<br></p></div><div id="ORA" class="reference_card logic_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>ORA - "OR" Memory with Accumulator</h2><p><b>Operation</b>: A ∨ M → A<br></p><p>The
+ ORA instruction transfers the memory and the accumulator to the adder 
+which performs a binary "OR" on a bit-by-bit basis and stores the result
+ in the accumulator.</p><p>This instruction affects the accumulator; 
+sets the zero flag if the result in the accumulator is 0, otherwise 
+resets the zero flag; sets the negative flag if the result in the 
+accumulator has bit 7 on, otherwise resets the negative flag.</p><table class="reference_table"><tr><th class="logic">Addressing Mode</th><th class="logic">Assembly Language Form</th><th class="logic">Opcode</th><th class="logic">No. Bytes</th><th class="logic">No. Cycles</th></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">ORA #$nn</td><td style="text-align: center;">$09</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">ORA $nnnn</td><td style="text-align: center;">$0D</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">ORA $nnnn,X</td><td style="text-align: center;">$1D</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">ORA $nnnn,Y</td><td style="text-align: center;">$19</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">ORA $nn</td><td style="text-align: center;">$05</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">ORA $nn,X</td><td style="text-align: center;">$15</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr class="logic_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">ORA ($nn,X)</td><td style="text-align: center;">$01</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">ORA ($nn),Y</td><td style="text-align: center;">$11</td><td style="text-align: center;">2</td><td style="text-align: center;">5+p</td></tr></table><p>p: =1 if page is crossed.<br></p></div><div id="ADC" class="reference_card arith_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>ADC - Add Memory to Accumulator with Carry</h2><p><b>Operation</b>: A + M + C → A, C<br></p><p>This
+ instruction adds the value of memory and carry from the previous 
+operation to the value of the accumulator and stores the result in the 
+accumulator.</p><p>This instruction affects the accumulator; sets the 
+carry flag when the sum of a binary add exceeds 255 or when the sum of a
+ decimal add exceeds 99, otherwise carry is reset. The overflow flag is 
+set when the sign or bit 7 is changed due to the result exceeding +127 
+or -128, otherwise overflow is reset. The negative flag is set if the 
+accumulator result contains bit 7 on, otherwise the negative flag is 
+reset. The zero flag is set if the accumulator result is 0, otherwise 
+the zero flag is reset.</p><p class="bug_box"><p><b>Note on the MOS 6502:</b><br></p><p>In decimal mode, the N, V and Z flags are not consistent with the decimal result.</p></p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">ADC #$nn</td><td style="text-align: center;">$69</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">ADC $nnnn</td><td style="text-align: center;">$6D</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">ADC $nnnn,X</td><td style="text-align: center;">$7D</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">ADC $nnnn,Y</td><td style="text-align: center;">$79</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">ADC $nn</td><td style="text-align: center;">$65</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">ADC $nn,X</td><td style="text-align: center;">$75</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">ADC ($nn,X)</td><td style="text-align: center;">$61</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">ADC ($nn),Y</td><td style="text-align: center;">$71</td><td style="text-align: center;">2</td><td style="text-align: center;">5+p</td></tr></table><p>p: =1 if page is crossed.<br></p></div><div id="ANC" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>ANC - "AND" Memory with Accumulator then Move Negative Flag to Carry Flag</h2><p><b>Operation</b>: A ∧ M → A, N → C<br></p><p>The
+ undocumented ANC instruction performs a bit-by-bit AND operation of the
+ accumulator and memory and stores the result back in the accumulator.</p><p>This
+ instruction affects the accumulator; sets the zero flag if the result 
+in the accumulator is 0, otherwise resets the zero flag; sets the 
+negative flag and the carry flag if the result in the accumulator has 
+bit 7 on, otherwise resets the negative flag and the carry flag.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">ANC #$nn</td><td style="text-align: center;">$0B*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">ANC #$nn</td><td style="text-align: center;">$2B*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr></table><p>*Undocumented.<br></p></div><div id="ARR" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>ARR - "AND" Accumulator then Rotate Right</h2><p><b>Operation</b>: (A ∧ M) / 2 → A<br></p><p>The
+ undocumented ARR instruction performs a bit-by-bit "AND" operation of 
+the accumulator and memory, then shifts the result right 1 bit with bit 0
+ shifted into the carry and carry shifted into bit 7. It then stores the
+ result back in the accumulator.</p><p>If bit 7 of the result is on, 
+then the N flag is set, otherwise it is reset. The instruction sets the Z
+ flag if the result is 0; otherwise it resets Z.</p><p>The V and C flags depends on the Decimal Mode Flag:</p><p>In
+ decimal mode, the V flag is set if bit 6 is different than the original
+ data's bit 6, otherwise the V flag is reset. The C flag is set if 
+(operand &amp; 0xF0) + (operand &amp; 0x10) is greater than 0x50, 
+otherwise the C flag is reset.</p><p>In binary mode, the V flag is set 
+if bit 6 of the result is different than bit 5 of the result, otherwise 
+the V flag is reset. The C flag is set if the result in the accumulator 
+has bit 6 on, otherwise it is reset.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">ARR #$nn</td><td style="text-align: center;">$6B*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr></table><p>*Undocumented.<br></p></div><div id="ASR" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>0</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>ASR - "AND" then Logical Shift Right</h2><p><b>Operation</b>: (A ∧ M) / 2 → A<br></p><p>The
+ undocumented ASR instruction performs a bit-by-bit AND operation of the
+ accumulator and memory, then shifts the accumulator 1 bit to the right,
+ with the higher bit of the result always being set to 0, and the low 
+bit which is shifted out of the field being stored in the carry flag.</p><p>This
+ instruction affects the accumulator. It does not affect the overflow 
+flag. The N flag is always reset. The Z flag is set if the result of the
+ shift is 0 and reset otherwise. The carry is set equal to bit 0 of the 
+result of the "AND" operation.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">ASR #$nn</td><td style="text-align: center;">$4B*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr></table><p>*Undocumented.<br></p></div><div id="CMP" class="reference_card arith_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>CMP - Compare Memory and Accumulator</h2><p><b>Operation</b>: A - M<br></p><p>This instruction subtracts the contents of memory from the contents of the accumulator.</p><p>The
+ use of the CMP affects the following flags: Z flag is set on an equal 
+comparison, reset otherwise; the N flag is set or reset by the result 
+bit 7, the carry flag is set when the value in memory is less than or 
+equal to the accumulator, reset when it is greater than the accumulator.
+ The accumulator is not affected.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">CMP #$nn</td><td style="text-align: center;">$C9</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">CMP $nnnn</td><td style="text-align: center;">$CD</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">CMP $nnnn,X</td><td style="text-align: center;">$DD</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">CMP $nnnn,Y</td><td style="text-align: center;">$D9</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">CMP $nn</td><td style="text-align: center;">$C5</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">CMP $nn,X</td><td style="text-align: center;">$D5</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">CMP ($nn,X)</td><td style="text-align: center;">$C1</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">CMP ($nn),Y</td><td style="text-align: center;">$D1</td><td style="text-align: center;">2</td><td style="text-align: center;">5+p</td></tr></table><p>p: =1 if page is crossed.<br></p></div><div id="CPX" class="reference_card arith_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>CPX - Compare Index Register X To Memory</h2><p><b>Operation</b>: X - M<br></p><p>This
+ instruction subtracts the value of the addressed memory location from 
+the content of index register X using the adder but does not store the 
+result; therefore, its only use is to set the N, Z and C flags to allow 
+for comparison between the index register X and the value in memory.</p><p>The
+ CPX instruction does not affect any register in the machine; it also 
+does not affect the overflow flag. It causes the carry to be set on if 
+the absolute value of the index register X is equal to or greater than 
+the data from memory. If the value of the memory is greater than the 
+content of the index register X, carry is reset. If the results of the 
+subtraction contain a bit 7, then the N flag is set, if not, it is 
+reset. If the value in memory is equal to the value in index register X,
+ the Z flag is set, otherwise it is reset.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">CPX #$nn</td><td style="text-align: center;">$E0</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">CPX $nnnn</td><td style="text-align: center;">$EC</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">CPX $nn</td><td style="text-align: center;">$E4</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr></table><p></p></div><div id="CPY" class="reference_card arith_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>CPY - Compare Index Register Y To Memory</h2><p><b>Operation</b>: Y - M<br></p><p>This
+ instruction performs a two's complement subtraction between the index 
+register Y and the specified memory location. The results of the 
+subtraction are not stored anywhere. The instruction is strict­ly used 
+to set the flags.</p><p>CPY affects no registers in the microprocessor 
+and also does not affect the overflow flag. If the value in the index 
+register Y is equal to or greater than the value in the memory, the 
+carry flag will be set, otherwise it will be cleared. If the results of 
+the subtract- tion contain bit 7 on the N bit will be set, otherwise it 
+will be cleared. If the value in the index register Y and the value in 
+the memory are equal, the zero flag will be set, otherwise it will be 
+cleared.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">CPY #$nn</td><td style="text-align: center;">$C0</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">CPY $nnnn</td><td style="text-align: center;">$CC</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">CPY $nn</td><td style="text-align: center;">$C4</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr></table><p></p></div><div id="DCP" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>DCP - Decrement Memory By One then Compare with Accumulator</h2><p><b>Operation</b>: M - 1 → M, A - M<br></p><p>This
+ undocumented instruction subtracts 1, in two's complement, from the 
+contents of the addressed memory location. It then subtracts the 
+contents of memory from the contents of the accumulator.</p><p>The DCP 
+instruction does not affect any internal register in the microprocessor.
+ It does not affect the overflow flag. Z flag is set on an equal 
+comparison, reset otherwise; the N flag is set or reset by the result 
+bit 7, the carry flag is set when the result in memory is less than or 
+equal to the accumulator, reset when it is greater than the accumulator.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">DCP $nnnn</td><td style="text-align: center;">$CF*</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">DCP $nnnn,X</td><td style="text-align: center;">$DF*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">DCP $nnnn,Y</td><td style="text-align: center;">$DB*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">DCP $nn</td><td style="text-align: center;">$C7*</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">DCP $nn,X</td><td style="text-align: center;">$D7*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">DCP ($nn,X)</td><td style="text-align: center;">$C3*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">DCP ($nn),Y</td><td style="text-align: center;">$D3*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr></table><p>*Undocumented.<br></p></div><div id="ISC" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>ISC - Increment Memory By One then SBC then Subtract Memory from Accumulator with Borrow</h2><p><b>Operation</b>: M + 1 → M, A - M → A<br></p><p>This
+ undocumented instruction adds 1 to the contents of the addressed memory
+ loca­tion. It then subtracts the value of the result in memory and 
+borrow from the value of the accumulator, using two's complement 
+arithmetic, and stores the result in the accumulator.</p><p>This 
+instruction affects the accumulator. The carry flag is set if the result
+ is greater than or equal to 0. The carry flag is reset when the result 
+is less than 0, indicating a borrow. The over­flow flag is set when the 
+result exceeds +127 or -127, otherwise it is reset. The negative flag is
+ set if the result in the accumulator has bit 7 on, otherwise it is 
+reset. The Z flag is set if the result in the accumulator is 0, 
+otherwise it is reset.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">ISC $nnnn</td><td style="text-align: center;">$EF*</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">ISC $nnnn,X</td><td style="text-align: center;">$FF*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">ISC $nnnn,Y</td><td style="text-align: center;">$FB*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">ISC $nn</td><td style="text-align: center;">$E7*</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">ISC $nn,X</td><td style="text-align: center;">$F7*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">ISC ($nn,X)</td><td style="text-align: center;">$E3*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">ISC ($nn),Y</td><td style="text-align: center;">$F3*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr></table><p>*Undocumented.<br></p></div><div id="RLA" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>RLA - Rotate Left then "AND" with Accumulator</h2><p><b>Operation</b>: C ← /M<sub>7</sub>...M<sub>0</sub>/ ← C, A ∧ M → A<br></p><p>The
+ undocumented RLA instruction shifts the addressed memory left 1 bit, 
+with the input carry being stored in bit 0 and with the input bit 7 
+being stored in the carry flags. It then performs a bit-by-bit AND 
+operation of the result and the value of the accumulator and stores the 
+result back in the accumulator.</p><p>This instruction affects the 
+accumulator; sets the zero flag if the result in the accumulator is 0, 
+otherwise resets the zero flag; sets the negative flag if the result in 
+the accumulator has bit 7 on, otherwise resets the negative flag.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">RLA $nnnn</td><td style="text-align: center;">$2F*</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">RLA $nnnn,X</td><td style="text-align: center;">$3F*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">RLA $nnnn,Y</td><td style="text-align: center;">$3B*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">RLA $nn</td><td style="text-align: center;">$27*</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">RLA $nn,X</td><td style="text-align: center;">$37*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">RLA ($nn,X)</td><td style="text-align: center;">$23*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">RLA ($nn),Y</td><td style="text-align: center;">$33*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr></table><p>*Undocumented.<br></p></div><div id="RRA" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>RRA - Rotate Right and Add Memory to Accumulator</h2><p><b>Operation</b>: C → /M<sub>7</sub>...M<sub>0</sub>/ → C, A + M + C → A<br></p><p>The
+ undocumented RRA instruction shifts the addressed memory right 1 bit 
+with bit 0 shifted into the carry and carry shifted into bit 7. It then 
+adds the result and generated carry to the value of the accumulator and 
+stores the result in the accumulator.</p><p>This instruction affects the
+ accumulator; sets the carry flag when the sum of a binary add exceeds 
+255 or when the sum of a decimal add exceeds 99, otherwise carry is 
+reset. The overflow flag is set when the sign or bit 7 is changed due to
+ the result exceeding +127 or -128, otherwise overflow is reset. The 
+negative flag is set if the accumulator result contains bit 7 on, 
+otherwise the negative flag is reset. The zero flag is set if the 
+accumulator result is 0, otherwise the zero flag is reset.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">RRA $nnnn</td><td style="text-align: center;">$6F*</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">RRA $nnnn,X</td><td style="text-align: center;">$7F*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">RRA $nnnn,Y</td><td style="text-align: center;">$7B*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">RRA $nn</td><td style="text-align: center;">$67*</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">RRA $nn,X</td><td style="text-align: center;">$77*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">RRA ($nn,X)</td><td style="text-align: center;">$63*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">RRA ($nn),Y</td><td style="text-align: center;">$73*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr></table><p>*Undocumented.<br></p></div><div id="SBC" class="reference_card arith_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>SBC - Subtract Memory from Accumulator with Borrow</h2><p><b>Operation</b>: A - M - ~C → A<br></p><p>This
+ instruction subtracts the value of memory and borrow from the value of 
+the accumulator, using two's complement arithmetic, and stores the 
+result in the accumulator. Borrow is defined as the carry flag 
+complemented; therefore, a resultant carry flag indicates that a borrow 
+has not occurred.</p><p>This instruction affects the accumulator. The 
+carry flag is set if the result is greater than or equal to 0. The carry
+ flag is reset when the result is less than 0, indicating a borrow. The 
+over­flow flag is set when the result exceeds +127 or -127, otherwise it
+ is reset. The negative flag is set if the result in the accumulator has
+ bit 7 on, otherwise it is reset. The Z flag is set if the result in the
+ accumulator is 0, otherwise it is reset.</p><p class="bug_box"><p><b>Note on the MOS 6502:</b><br></p><p>In decimal mode, the N, V and Z flags are not consistent with the decimal result.</p></p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">SBC #$nn</td><td style="text-align: center;">$E9</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">SBC #$nn</td><td style="text-align: center;">$EB*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">SBC $nnnn</td><td style="text-align: center;">$ED</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">SBC $nnnn,X</td><td style="text-align: center;">$FD</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">SBC $nnnn,Y</td><td style="text-align: center;">$F9</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">SBC $nn</td><td style="text-align: center;">$E5</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">SBC $nn,X</td><td style="text-align: center;">$F5</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">SBC ($nn,X)</td><td style="text-align: center;">$E1</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">SBC ($nn),Y</td><td style="text-align: center;">$F1</td><td style="text-align: center;">2</td><td style="text-align: center;">5+p</td></tr></table><p>*Undocumented.<br>p: =1 if page is crossed.<br></p></div><div id="SBX" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>SBX - Subtract Memory from Accumulator "AND" Index Register X</h2><p><b>Operation</b>: (A ∧ X) - M → X<br></p><p>This
+ undocumented instruction performs a bit-by-bit "AND" of the value of 
+the accumulator and the index register X and subtracts the value of 
+memory from this result, using two's complement arithmetic, and stores 
+the result in the index register X.</p><p>This instruction affects the 
+index register X. The carry flag is set if the result is greater than or
+ equal to 0. The carry flag is reset when the result is less than 0, 
+indicating a borrow. The negative flag is set if the result in index 
+register X has bit 7 on, otherwise it is reset. The Z flag is set if the
+ result in index register X is 0, otherwise it is reset. The over­flow 
+flag not affected at all.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">SBX #$nn</td><td style="text-align: center;">$CB*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr></table><p>*Undocumented.<br></p></div><div id="SLO" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>SLO - Arithmetic Shift Left then "OR" Memory with Accumulator</h2><p><b>Operation</b>: M * 2 → M, A ∨ M → A<br></p><p>The
+ undocumented SLO instruction shifts the address memory location 1 bit 
+to the left, with the bit 0 always being set to 0 and the bit 7 output 
+always being contained in the carry flag. It then performs a bit-by-bit 
+"OR" operation on the result and the accumulator and stores the result 
+in the accumulator.</p><p>The negative flag is set if the accumulator 
+result contains bit 7 on, otherwise the negative flag is reset. It sets Z
+ flag if the result is equal to 0, otherwise resets Z and stores the 
+input bit 7 in the carry flag.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">SLO $nnnn</td><td style="text-align: center;">$0F*</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">SLO $nnnn,X</td><td style="text-align: center;">$1F*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">SLO $nnnn,Y</td><td style="text-align: center;">$1B*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">SLO $nn</td><td style="text-align: center;">$07*</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">SLO $nn,X</td><td style="text-align: center;">$17*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">SLO ($nn,X)</td><td style="text-align: center;">$03*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">SLO ($nn),Y</td><td style="text-align: center;">$13*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr></table><p>*Undocumented.<br></p></div><div id="SRE" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr></table><h2>SRE - Logical Shift Right then "Exclusive OR" Memory with Accumulator</h2><p><b>Operation</b>: M / 2 → M, A ⊻ M → A<br></p><p>The
+ undocumented SRE instruction shifts the specified memory location 1 bit
+ to the right, with the higher bit of the result always being set to 0, 
+and the low bit which is shifted out of the field being stored in the 
+carry flag. It then performs a bit-by-bit "EXCLUSIVE OR" of the result 
+and the value of the accumulator and stores the result in the 
+accumulator.</p><p>This instruction affects the accumulator. It does not
+ affect the overflow flag. The negative flag is set if the accumulator 
+result contains bit 7 on, otherwise the negative flag is reset. The Z 
+flag is set if the result is 0 and reset otherwise. The carry is set 
+equal to input bit 0.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">SRE $nnnn</td><td style="text-align: center;">$4F*</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">SRE $nnnn,X</td><td style="text-align: center;">$5F*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,Y" onclick="navigateTo('6502', 3, 'a16,Y');">Y-Indexed Absolute</a></td><td style="font-family: monospace;">SRE $nnnn,Y</td><td style="text-align: center;">$5B*</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">SRE $nn</td><td style="text-align: center;">$47*</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">SRE $nn,X</td><td style="text-align: center;">$57*</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8,X)" onclick="navigateTo('6502', 3, '(a8,X)');">X-Indexed Zero Page Indirect</a></td><td style="font-family: monospace;">SRE ($nn,X)</td><td style="text-align: center;">$43*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a8),Y" onclick="navigateTo('6502', 3, '(a8),Y');">Zero Page Indirect Y-Indexed</a></td><td style="font-family: monospace;">SRE ($nn),Y</td><td style="text-align: center;">$53*</td><td style="text-align: center;">2</td><td style="text-align: center;">8</td></tr></table><p>*Undocumented.<br></p></div><div id="XAA" class="reference_card arith_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>XAA - Non-deterministic Operation of Accumulator, Index Register X, Memory and Bus Contents</h2><p><b>Operation</b>: (A ∨ V) ∧ X ∧ M → A<br></p><p>The
+ operation of the undocumented XAA instruction depends on the individual
+ microprocessor. On most machines, it performs a bit-by-bit AND 
+operation of the following three operands: The first two are the index 
+register X and memory.</p><p>The third operand is the result of a 
+bit-by-bit AND operation of the accumulator and a magic component. This 
+magic component depends on the individual microprocessor and is usually 
+one of $00, $EE, $EF, $FE and $FF, and may be influenced by the RDY pin,
+ leftover contents of the data bus, the temperature of the 
+microprocessor, the supplied voltage, and other factors.</p><p>On some machines, additional bits of the result may be set or reset depending on non-deterministic factors.</p><p>It then transfers the result to the accumulator.</p><p>XAA
+ does not affect the C or V flags; sets Z if the value loaded was zero, 
+otherwise resets it; sets N if the result in bit 7 is a 1; otherwise N 
+is reset.</p><table class="reference_table"><tr><th class="arith">Addressing Mode</th><th class="arith">Assembly Language Form</th><th class="arith">Opcode</th><th class="arith">No. Bytes</th><th class="arith">No. Cycles</th></tr><tr class="arith_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">XAA #$nn</td><td style="text-align: center;">$8B*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr></table><p>*Undocumented.<br></p></div><div id="DEC" class="reference_card inc_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>DEC - Decrement Memory By One</h2><p><b>Operation</b>: M - 1 → M<br></p><p>This instruction subtracts 1, in two's complement, from the contents of the addressed memory location.</p><p>The
+ decrement instruction does not affect any internal register in the 
+microprocessor. It does not affect the carry or overflow flags. If bit 7
+ is on as a result of the decrement, then the N flag is set, otherwise 
+it is reset. If the result of the decrement is 0, the Z flag is set, 
+other­wise it is reset.</p><table class="reference_table"><tr><th class="inc">Addressing Mode</th><th class="inc">Assembly Language Form</th><th class="inc">Opcode</th><th class="inc">No. Bytes</th><th class="inc">No. Cycles</th></tr><tr class="inc_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">DEC $nnnn</td><td style="text-align: center;">$CE</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">DEC $nnnn,X</td><td style="text-align: center;">$DE</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr class="inc_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">DEC $nn</td><td style="text-align: center;">$C6</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">DEC $nn,X</td><td style="text-align: center;">$D6</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="DEX" class="reference_card inc_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>DEX - Decrement Index Register X By One</h2><p><b>Operation</b>: X - 1 → X<br></p><p>This instruction subtracts one from the current value of the index register X and stores the result in the index register X.</p><p>DEX
+ does not affect the carry or overflow flag, it sets the N flag if it 
+has bit 7 on as a result of the decrement, otherwise it resets the N 
+flag; sets the Z flag if X is a 0 as a result of the decrement, 
+otherwise it resets the Z flag.</p><table class="reference_table"><tr><th class="inc">Addressing Mode</th><th class="inc">Assembly Language Form</th><th class="inc">Opcode</th><th class="inc">No. Bytes</th><th class="inc">No. Cycles</th></tr><tr class="inc_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">DEX </td><td style="text-align: center;">$CA</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="DEY" class="reference_card inc_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>DEY - Decrement Index Register Y By One</h2><p><b>Operation</b>: Y - 1 → Y<br></p><p>This
+ instruction subtracts one from the current value in the in­ dex 
+register Y and stores the result into the index register Y. The result 
+does not affect or consider carry so that the value in the index 
+register Y is decremented to 0 and then through 0 to FF.</p><p>Decrement
+ Y does not affect the carry or overflow flags; if the Y register 
+contains bit 7 on as a result of the decrement the N flag is set, 
+otherwise the N flag is reset. If the Y register is 0 as a result of the
+ decrement, the Z flag is set otherwise the Z flag is reset. This 
+instruction only affects the index register Y.</p><table class="reference_table"><tr><th class="inc">Addressing Mode</th><th class="inc">Assembly Language Form</th><th class="inc">Opcode</th><th class="inc">No. Bytes</th><th class="inc">No. Cycles</th></tr><tr class="inc_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">DEY </td><td style="text-align: center;">$88</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="INC" class="reference_card inc_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>INC - Increment Memory By One</h2><p><b>Operation</b>: M + 1 → M<br></p><p>This instruction adds 1 to the contents of the addressed memory loca­tion.</p><p>The
+ increment memory instruction does not affect any internal registers and
+ does not affect the carry or overflow flags. If bit 7 is on as the 
+result of the increment,N is set, otherwise it is reset; if the 
+increment causes the result to become 0, the Z flag is set on, otherwise
+ it is reset.</p><table class="reference_table"><tr><th class="inc">Addressing Mode</th><th class="inc">Assembly Language Form</th><th class="inc">Opcode</th><th class="inc">No. Bytes</th><th class="inc">No. Cycles</th></tr><tr class="inc_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">INC $nnnn</td><td style="text-align: center;">$EE</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">INC $nnnn,X</td><td style="text-align: center;">$FE</td><td style="text-align: center;">3</td><td style="text-align: center;">7</td></tr><tr class="inc_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">INC $nn</td><td style="text-align: center;">$E6</td><td style="text-align: center;">2</td><td style="text-align: center;">5</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">INC $nn,X</td><td style="text-align: center;">$F6</td><td style="text-align: center;">2</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="INX" class="reference_card inc_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>INX - Increment Index Register X By One</h2><p><b>Operation</b>: X + 1 → X<br></p><p>Increment
+ X adds 1 to the current value of the X register. This is an 8-bit 
+increment which does not affect the carry operation, therefore, if the 
+value of X before the increment was FF, the resulting value is 00.</p><p>INX
+ does not affect the carry or overflow flags; it sets the N flag if the 
+result of the increment has a one in bit 7, otherwise resets N; sets the
+ Z flag if the result of the increment is 0, otherwise it resets the Z 
+flag.</p><p>INX does not affect any other register other than the X register.</p><table class="reference_table"><tr><th class="inc">Addressing Mode</th><th class="inc">Assembly Language Form</th><th class="inc">Opcode</th><th class="inc">No. Bytes</th><th class="inc">No. Cycles</th></tr><tr class="inc_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">INX </td><td style="text-align: center;">$E8</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="INY" class="reference_card inc_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr></table><h2>INY - Increment Index Register Y By One</h2><p><b>Operation</b>: Y + 1 → Y<br></p><p>Increment
+ Y increments or adds one to the current value in the Y register, 
+storing the result in the Y register. As in the case of INX the primary 
+application is to step thru a set of values using the Y register.</p><p>The
+ INY does not affect the carry or overflow flags, sets the N flag if the
+ result of the increment has a one in bit 7, otherwise resets N, sets Z 
+if as a result of the increment the Y register is zero otherwise resets 
+the Z flag.</p><table class="reference_table"><tr><th class="inc">Addressing Mode</th><th class="inc">Assembly Language Form</th><th class="inc">Opcode</th><th class="inc">No. Bytes</th><th class="inc">No. Cycles</th></tr><tr class="inc_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">INY </td><td style="text-align: center;">$C8</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="BRK" class="reference_card ctrl_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1</td><td>-</td><td>-</td></tr></table><h2>BRK - Break Command</h2><p><b>Operation</b>: PC + 2↓, [FFFE] → PCL, [FFFF] → PCH<br></p><p>The
+ break command causes the microprocessor to go through an inter­ rupt 
+sequence under program control. This means that the program counter of 
+the second byte after the BRK. is automatically stored on the stack 
+along with the processor status at the beginning of the break 
+instruction. The microprocessor then transfers control to the interrupt 
+vector.</p><p>Other than changing the program counter, the break instruction changes no values in either the registers or the flags.</p><p class="bug_box"><p><b>Note on the MOS 6502:</b><br></p><p>If an IRQ happens at the same time as a BRK instruction, the BRK instruction is ignored.</p></p><table class="reference_table"><tr><th class="ctrl">Addressing Mode</th><th class="ctrl">Assembly Language Form</th><th class="ctrl">Opcode</th><th class="ctrl">No. Bytes</th><th class="ctrl">No. Cycles</th></tr><tr class="ctrl_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">BRK </td><td style="text-align: center;">$00</td><td style="text-align: center;">1</td><td style="text-align: center;">7</td></tr></table><p></p></div><div id="JMP" class="reference_card ctrl_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>JMP - JMP Indirect</h2><p><b>Operation</b>: [PC + 1] → PCL, [PC + 2] → PCH<br></p><p>This instruction establishes a new valne for the program counter.</p><p>It affects only the program counter in the microprocessor and affects no flags in the status register.</p><table class="reference_table"><tr><th class="ctrl">Addressing Mode</th><th class="ctrl">Assembly Language Form</th><th class="ctrl">Opcode</th><th class="ctrl">No. Bytes</th><th class="ctrl">No. Cycles</th></tr><tr class="ctrl_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">JMP $nnnn</td><td style="text-align: center;">$4C</td><td style="text-align: center;">3</td><td style="text-align: center;">3</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#(a16)" onclick="navigateTo('6502', 3, '(a16)');">Absolute Indirect</a></td><td style="font-family: monospace;">JMP ($nnnn)</td><td style="text-align: center;">$6C</td><td style="text-align: center;">3</td><td style="text-align: center;">5</td></tr></table><p></p></div><div id="JSR" class="reference_card ctrl_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>JSR - Jump To Subroutine</h2><p><b>Operation</b>: PC + 2↓, [PC + 1] → PCL, [PC + 2] → PCH<br></p><p>This
+ instruction transfers control of the program counter to a subroutine 
+location but leaves a return pointer on the stack to allow the user to 
+return to perform the next instruction in the main program after the 
+subroutine is complete. To accomplish this, JSR instruction stores the 
+program counter address which points to the last byte of the jump 
+instruc­ tion onto the stack using the stack pointer. The stack byte 
+contains the program count high first, followed by program count low. 
+The JSR then transfers the addresses following the jump instruction to 
+the program counter low and the program counter high, thereby directing 
+the program to begin at that new address.</p><p>The JSR instruction 
+affects no flags, causes the stack pointer to be decremented by 2 and 
+substitutes new values into the program counter low and the program 
+counter high.</p><table class="reference_table"><tr><th class="ctrl">Addressing Mode</th><th class="ctrl">Assembly Language Form</th><th class="ctrl">Opcode</th><th class="ctrl">No. Bytes</th><th class="ctrl">No. Cycles</th></tr><tr class="ctrl_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">JSR $nnnn</td><td style="text-align: center;">$20</td><td style="text-align: center;">3</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="RTI" class="reference_card ctrl_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>✓</td><td>✓</td><td>-</td><td>-</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr></table><h2>RTI - Return From Interrupt</h2><p><b>Operation</b>: P↑ PC↑<br></p><p>This
+ instruction transfers from the stack into the microprocessor the 
+processor status and the program counter location for the instruction 
+which was interrupted. By virtue of the interrupt having stored this 
+data before executing the instruction and thei fact that the RTI 
+reinitializes the microprocessor to the same state as when it was 
+interrupted, the combination of interrupt plus RTI allows truly 
+reentrant coding.</p><p>The RTI instruction reinitializes all flags to 
+the position to the point they were at the time the interrupt was taken 
+and sets the program counter back to its pre-interrupt state. It affects
+ no other registers in the microprocessor.</p><table class="reference_table"><tr><th class="ctrl">Addressing Mode</th><th class="ctrl">Assembly Language Form</th><th class="ctrl">Opcode</th><th class="ctrl">No. Bytes</th><th class="ctrl">No. Cycles</th></tr><tr class="ctrl_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">RTI </td><td style="text-align: center;">$40</td><td style="text-align: center;">1</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="RTS" class="reference_card ctrl_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>RTS - Return From Subroutine</h2><p><b>Operation</b>: PC↑, PC + 1 → PC<br></p><p>This
+ instruction loads the program count low and program count high from the
+ stack into the program counter and increments the program counter so 
+that it points to the instruction following the JSR. The stack pointer 
+is adjusted by incrementing it twice.</p><p>The RTS instruction does not affect any flags and affects only PCL and PCH.</p><table class="reference_table"><tr><th class="ctrl">Addressing Mode</th><th class="ctrl">Assembly Language Form</th><th class="ctrl">Opcode</th><th class="ctrl">No. Bytes</th><th class="ctrl">No. Cycles</th></tr><tr class="ctrl_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">RTS </td><td style="text-align: center;">$60</td><td style="text-align: center;">1</td><td style="text-align: center;">6</td></tr></table><p></p></div><div id="BCC" class="reference_card bra_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>BCC - Branch on Carry Clear</h2><p><b>Operation</b>: Branch on C = 0<br></p><p>This instruction tests the state of the carry bit and takes a conditional branch if the carry bit is reset.</p><p>It affects no flags or registers other than the program counter and then only if the C flag is not on.</p><table class="reference_table"><tr><th class="bra">Addressing Mode</th><th class="bra">Assembly Language Form</th><th class="bra">Opcode</th><th class="bra">No. Bytes</th><th class="bra">No. Cycles</th></tr><tr class="bra_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#r8" onclick="navigateTo('6502', 3, 'r8');">Relative</a></td><td style="font-family: monospace;">BCC $nnnn</td><td style="text-align: center;">$90</td><td style="text-align: center;">2</td><td style="text-align: center;">2+t+p</td></tr></table><p>p: =1 if page is crossed.<br>t: =1 if branch is taken.<br></p></div><div id="BCS" class="reference_card bra_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>BCS - Branch on Carry Set</h2><p><b>Operation</b>: Branch on C = 1<br></p><p>This instruction takes the conditional branch if the carry flag is on.</p><p>BCS does not affect any of the flags or registers except for the program counter and only then if the carry flag is on.</p><table class="reference_table"><tr><th class="bra">Addressing Mode</th><th class="bra">Assembly Language Form</th><th class="bra">Opcode</th><th class="bra">No. Bytes</th><th class="bra">No. Cycles</th></tr><tr class="bra_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#r8" onclick="navigateTo('6502', 3, 'r8');">Relative</a></td><td style="font-family: monospace;">BCS $nnnn</td><td style="text-align: center;">$B0</td><td style="text-align: center;">2</td><td style="text-align: center;">2+t+p</td></tr></table><p>p: =1 if page is crossed.<br>t: =1 if branch is taken.<br></p></div><div id="BEQ" class="reference_card bra_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>BEQ - Branch on Result Zero</h2><p><b>Operation</b>: Branch on Z = 1<br></p><p>This instruction could also be called "Branch on Equal."</p><p>It takes a conditional branch whenever the Z flag is on or the previ­ ous result is equal to 0.</p><p>BEQ does not affect any of the flags or registers other than the program counter and only then when the Z flag is set.</p><table class="reference_table"><tr><th class="bra">Addressing Mode</th><th class="bra">Assembly Language Form</th><th class="bra">Opcode</th><th class="bra">No. Bytes</th><th class="bra">No. Cycles</th></tr><tr class="bra_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#r8" onclick="navigateTo('6502', 3, 'r8');">Relative</a></td><td style="font-family: monospace;">BEQ $nnnn</td><td style="text-align: center;">$F0</td><td style="text-align: center;">2</td><td style="text-align: center;">2+t+p</td></tr></table><p>p: =1 if page is crossed.<br>t: =1 if branch is taken.<br></p></div><div id="BMI" class="reference_card bra_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>BMI - Branch on Result Minus</h2><p><b>Operation</b>: Branch on N = 1<br></p><p>This instruction takes the conditional branch if the N bit is set.</p><p>BMI
+ does not affect any of the flags or any other part of the machine other
+ than the program counter and then only if the N bit is on.</p><table class="reference_table"><tr><th class="bra">Addressing Mode</th><th class="bra">Assembly Language Form</th><th class="bra">Opcode</th><th class="bra">No. Bytes</th><th class="bra">No. Cycles</th></tr><tr class="bra_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#r8" onclick="navigateTo('6502', 3, 'r8');">Relative</a></td><td style="font-family: monospace;">BMI $nnnn</td><td style="text-align: center;">$30</td><td style="text-align: center;">2</td><td style="text-align: center;">2+t+p</td></tr></table><p>p: =1 if page is crossed.<br>t: =1 if branch is taken.<br></p></div><div id="BNE" class="reference_card bra_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>BNE - Branch on Result Not Zero</h2><p><b>Operation</b>: Branch on Z = 0<br></p><p>This
+ instruction could also be called "Branch on Not Equal." It tests the Z 
+flag and takes the conditional branch if the Z flag is not on, 
+indicating that the previous result was not zero.</p><p>BNE does not affect any of the flags or registers other than the program counter and only then if the Z flag is reset.</p><table class="reference_table"><tr><th class="bra">Addressing Mode</th><th class="bra">Assembly Language Form</th><th class="bra">Opcode</th><th class="bra">No. Bytes</th><th class="bra">No. Cycles</th></tr><tr class="bra_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#r8" onclick="navigateTo('6502', 3, 'r8');">Relative</a></td><td style="font-family: monospace;">BNE $nnnn</td><td style="text-align: center;">$D0</td><td style="text-align: center;">2</td><td style="text-align: center;">2+t+p</td></tr></table><p>p: =1 if page is crossed.<br>t: =1 if branch is taken.<br></p></div><div id="BPL" class="reference_card bra_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>BPL - Branch on Result Plus</h2><p><b>Operation</b>: Branch on N = 0<br></p><p>This
+ instruction is the complementary branch to branch on result minus. It 
+is a conditional branch which takes the branch when the N bit is reset 
+(0). BPL is used to test if the previous result bit 7 was off (0) and 
+branch on result minus is used to determine if the previous result was 
+minus or bit 7 was on (1).</p><p>The instruction affects no flags or 
+other registers other than the P counter and only affects the P counter 
+when the N bit is reset.</p><table class="reference_table"><tr><th class="bra">Addressing Mode</th><th class="bra">Assembly Language Form</th><th class="bra">Opcode</th><th class="bra">No. Bytes</th><th class="bra">No. Cycles</th></tr><tr class="bra_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#r8" onclick="navigateTo('6502', 3, 'r8');">Relative</a></td><td style="font-family: monospace;">BPL $nnnn</td><td style="text-align: center;">$10</td><td style="text-align: center;">2</td><td style="text-align: center;">2+t+p</td></tr></table><p>p: =1 if page is crossed.<br>t: =1 if branch is taken.<br></p></div><div id="BVC" class="reference_card bra_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>BVC - Branch on Overflow Clear</h2><p><b>Operation</b>: Branch on V = 0<br></p><p>This instruction tests the status of the V flag and takes the conditional branch if the flag is not set.</p><p>BVC does not affect any of the flags and registers other than the program counter and only when the overflow flag is reset.</p><table class="reference_table"><tr><th class="bra">Addressing Mode</th><th class="bra">Assembly Language Form</th><th class="bra">Opcode</th><th class="bra">No. Bytes</th><th class="bra">No. Cycles</th></tr><tr class="bra_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#r8" onclick="navigateTo('6502', 3, 'r8');">Relative</a></td><td style="font-family: monospace;">BVC $nnnn</td><td style="text-align: center;">$50</td><td style="text-align: center;">2</td><td style="text-align: center;">2+t+p</td></tr></table><p>p: =1 if page is crossed.<br>t: =1 if branch is taken.<br></p></div><div id="BVS" class="reference_card bra_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>BVS - Branch on Overflow Set</h2><p><b>Operation</b>: Branch on V = 1<br></p><p>This instruction tests the V flag and takes the conditional branch if V is on.</p><p>BVS does not affect any flags or registers other than the program, counter and only when the overflow flag is set.</p><table class="reference_table"><tr><th class="bra">Addressing Mode</th><th class="bra">Assembly Language Form</th><th class="bra">Opcode</th><th class="bra">No. Bytes</th><th class="bra">No. Cycles</th></tr><tr class="bra_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#r8" onclick="navigateTo('6502', 3, 'r8');">Relative</a></td><td style="font-family: monospace;">BVS $nnnn</td><td style="text-align: center;">$70</td><td style="text-align: center;">2</td><td style="text-align: center;">2+t+p</td></tr></table><p>p: =1 if page is crossed.<br>t: =1 if branch is taken.<br></p></div><div id="CLC" class="reference_card flags_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td></tr></table><h2>CLC - Clear Carry Flag</h2><p><b>Operation</b>: 0 → C<br></p><p>This
+ instruction initializes the carry flag to a 0. This op­ eration should 
+normally precede an ADC loop. It is also useful when used with a R0L 
+instruction to clear a bit in memory.</p><p>This instruction affects no registers in the microprocessor and no flags other than the carry flag which is reset.</p><table class="reference_table"><tr><th class="flags">Addressing Mode</th><th class="flags">Assembly Language Form</th><th class="flags">Opcode</th><th class="flags">No. Bytes</th><th class="flags">No. Cycles</th></tr><tr class="flags_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">CLC </td><td style="text-align: center;">$18</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="CLD" class="reference_card flags_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td></tr></table><h2>CLD - Clear Decimal Mode</h2><p><b>Operation</b>: 0 → D<br></p><p>This
+ instruction sets the decimal mode flag to a 0. This all subsequent ADC 
+and SBC instructions to operate as simple operations.</p><p>CLD affects no registers in the microprocessor and no flags other than the decimal mode flag which is set to a 0.</p><p class="bug_box"><p><b>Note on the MOS 6502:</b><br></p><p>The value of the decimal mode flag is indeterminate after a RESET.</p></p><table class="reference_table"><tr><th class="flags">Addressing Mode</th><th class="flags">Assembly Language Form</th><th class="flags">Opcode</th><th class="flags">No. Bytes</th><th class="flags">No. Cycles</th></tr><tr class="flags_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">CLD </td><td style="text-align: center;">$D8</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="CLI" class="reference_card flags_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td><td>-</td><td>-</td></tr></table><h2>CLI - Clear Interrupt Disable</h2><p><b>Operation</b>: 0 → I<br></p><p>This instruction initializes the interrupt disable to a 0. This allows the microprocessor to receive interrupts.</p><p>It affects no registers in the microprocessor and no flags other than the interrupt disable which is cleared.</p><table class="reference_table"><tr><th class="flags">Addressing Mode</th><th class="flags">Assembly Language Form</th><th class="flags">Opcode</th><th class="flags">No. Bytes</th><th class="flags">No. Cycles</th></tr><tr class="flags_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">CLI </td><td style="text-align: center;">$58</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="CLV" class="reference_card flags_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>0</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>CLV - Clear Overflow Flag</h2><p><b>Operation</b>: 0 → V<br></p><p>This
+ instruction clears the overflow flag to a 0. This com­ mand is used in 
+conjunction with the set overflow pin which can change the state of the 
+overflow flag with an external signal.</p><p>CLV affects no registers in the microprocessor and no flags other than the overflow flag which is set to a 0.</p><table class="reference_table"><tr><th class="flags">Addressing Mode</th><th class="flags">Assembly Language Form</th><th class="flags">Opcode</th><th class="flags">No. Bytes</th><th class="flags">No. Cycles</th></tr><tr class="flags_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">CLV </td><td style="text-align: center;">$B8</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="SEC" class="reference_card flags_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1</td></tr></table><h2>SEC - Set Carry Flag</h2><p><b>Operation</b>: 1 → C<br></p><p>This
+ instruction initializes the carry flag to a 1. This op eration should 
+normally precede a SBC loop. It is also useful when used with a ROL 
+instruction to initialize a bit in memory to a 1.</p><p>This instruction affects no registers in the microprocessor and no flags other than the carry flag which is set.</p><table class="reference_table"><tr><th class="flags">Addressing Mode</th><th class="flags">Assembly Language Form</th><th class="flags">Opcode</th><th class="flags">No. Bytes</th><th class="flags">No. Cycles</th></tr><tr class="flags_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">SEC </td><td style="text-align: center;">$38</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="SED" class="reference_card flags_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>1</td><td>-</td><td>-</td><td>-</td></tr></table><h2>SED - Set Decimal Mode</h2><p><b>Operation</b>: 1 → D<br></p><p>This
+ instruction sets the decimal mode flag D to a 1. This makes all 
+subsequent ADC and SBC instructions operate as a decimal arithmetic 
+operation.</p><p>SED affects no registers in the microprocessor and no flags other than the decimal mode which is set to a 1.</p><p class="bug_box"><p><b>Note on the MOS 6502:</b><br></p><p>The value of the decimal mode flag is indeterminate after a RESET.</p></p><table class="reference_table"><tr><th class="flags">Addressing Mode</th><th class="flags">Assembly Language Form</th><th class="flags">Opcode</th><th class="flags">No. Bytes</th><th class="flags">No. Cycles</th></tr><tr class="flags_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">SED </td><td style="text-align: center;">$F8</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="SEI" class="reference_card flags_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1</td><td>-</td><td>-</td></tr></table><h2>SEI - Set Interrupt Disable</h2><p><b>Operation</b>: 1 → I<br></p><p>This
+ instruction initializes the interrupt disable to a 1. It is used to 
+mask interrupt requests during system reset operations and during 
+interrupt commands.</p><p>It affects no registers in the microprocessor and no flags other than the interrupt disable which is set.</p><table class="reference_table"><tr><th class="flags">Addressing Mode</th><th class="flags">Assembly Language Form</th><th class="flags">Opcode</th><th class="flags">No. Bytes</th><th class="flags">No. Cycles</th></tr><tr class="flags_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">SEI </td><td style="text-align: center;">$78</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr></table><p></p></div><div id="JAM" class="reference_card kil_light ill_big"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>JAM - Halt the CPU</h2><p><b>Operation</b>: Stop execution<br></p><p>This
+ undocumented instruction stops execution. The microprocessor will not 
+fetch further instructions, and will neither handle IRQs nor NMIs. It 
+will handle a RESET though.</p><table class="reference_table"><tr><th class="kil">Addressing Mode</th><th class="kil">Assembly Language Form</th><th class="kil">Opcode</th><th class="kil">No. Bytes</th><th class="kil">No. Cycles</th></tr><tr class="kil_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$02*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$12*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr class="kil_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$22*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$32*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr class="kil_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$42*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$52*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr class="kil_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$62*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$72*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr class="kil_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$92*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$B2*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr class="kil_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$D2*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">JAM </td><td style="text-align: center;">$F2*</td><td style="text-align: center;">1</td><td style="text-align: center;">X</td></tr></table><p>*Undocumented.<br></p></div><div id="NOP" class="reference_card nop_light"><table class="reference_flags_table"><tr><th>N</th><th>V</th><th>-</th><th>B</th><th>D</th><th>I</th><th>Z</th><th>C</th></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table><h2>NOP - No Operation</h2><p><b>Operation</b>: No operation<br></p><table class="reference_table"><tr><th class="nop">Addressing Mode</th><th class="nop">Assembly Language Form</th><th class="nop">Opcode</th><th class="nop">No. Bytes</th><th class="nop">No. Cycles</th></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">NOP </td><td style="text-align: center;">$1A*</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">NOP </td><td style="text-align: center;">$3A*</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">NOP </td><td style="text-align: center;">$5A*</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">NOP </td><td style="text-align: center;">$7A*</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">NOP </td><td style="text-align: center;">$DA*</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">NOP </td><td style="text-align: center;">$EA</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#-" onclick="navigateTo('6502', 3, '-');">Implied</a></td><td style="font-family: monospace;">NOP </td><td style="text-align: center;">$FA*</td><td style="text-align: center;">1</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">NOP #$nn</td><td style="text-align: center;">$80*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">NOP #$nn</td><td style="text-align: center;">$82*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">NOP #$nn</td><td style="text-align: center;">$89*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">NOP #$nn</td><td style="text-align: center;">$C2*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3##d8" onclick="navigateTo('6502', 3, '#d8');">Immediate</a></td><td style="font-family: monospace;">NOP #$nn</td><td style="text-align: center;">$E2*</td><td style="text-align: center;">2</td><td style="text-align: center;">2</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16" onclick="navigateTo('6502', 3, 'a16');">Absolute</a></td><td style="font-family: monospace;">NOP $nnnn</td><td style="text-align: center;">$0C*</td><td style="text-align: center;">3</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">NOP $nnnn,X</td><td style="text-align: center;">$1C*</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">NOP $nnnn,X</td><td style="text-align: center;">$3C*</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">NOP $nnnn,X</td><td style="text-align: center;">$5C*</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">NOP $nnnn,X</td><td style="text-align: center;">$7C*</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">NOP $nnnn,X</td><td style="text-align: center;">$DC*</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a16,X" onclick="navigateTo('6502', 3, 'a16,X');">X-Indexed Absolute</a></td><td style="font-family: monospace;">NOP $nnnn,X</td><td style="text-align: center;">$FC*</td><td style="text-align: center;">3</td><td style="text-align: center;">4+p</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">NOP $nn</td><td style="text-align: center;">$04*</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">NOP $nn</td><td style="text-align: center;">$44*</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8" onclick="navigateTo('6502', 3, 'a8');">Zero Page</a></td><td style="font-family: monospace;">NOP $nn</td><td style="text-align: center;">$64*</td><td style="text-align: center;">2</td><td style="text-align: center;">3</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">NOP $nn,X</td><td style="text-align: center;">$14*</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">NOP $nn,X</td><td style="text-align: center;">$34*</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">NOP $nn,X</td><td style="text-align: center;">$54*</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">NOP $nn,X</td><td style="text-align: center;">$74*</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr class="nop_light"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">NOP $nn,X</td><td style="text-align: center;">$D4*</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr><tr style="background-color: white;"><td><a href="https://www.pagetable.com/c64ref/6502/?tab=3#a8,X" onclick="navigateTo('6502', 3, 'a8,X');">X-Indexed Zero Page</a></td><td style="font-family: monospace;">NOP $nn,X</td><td style="text-align: center;">$F4*</td><td style="text-align: center;">2</td><td style="text-align: center;">4</td></tr></table><p>*Undocumented.<br>p: =1 if page is crossed.<br></p></div></div>
+		<div id="reference2"></div>
+	</div>
+
+
+	<div id="tab3c" style="display: none;">
+		<input checked="checked" type="checkbox" id="showinstructions" onclick="show()">
+		<label for="showinstructions">Show Instructions</label>
+		<span id="sortbycat3_box">
+			<input type="checkbox" id="sortbycat3" onclick="show()">
+			<label for="sortbycat3">Sort by Category</label>
+		</span>
+		<div id="addmode_div"></div>
+	</div>
+
+
+	<div id="tab4c" style="display: none;">
+		<input checked="checked" type="checkbox" id="showoperation" onclick="show()">
+		<label for="showoperation">Operation</label>
+		<input checked="checked" type="checkbox" id="showopcodes" onclick="show()">
+		<label for="showopcodes">Opcodes</label>
+		<input checked="checked" type="checkbox" id="showbytes" onclick="show()">
+		<label for="showbytes">Bytes</label>
+		<input checked="checked" type="checkbox" id="showcycles" onclick="show()">
+		<label for="showcycles">Cycles</label>
+		<span id="cycledetails_box">
+			<input type="checkbox" id="cycledetails" onclick="show()">
+			<label for="cycledetails">Details</label>
+		</span>
+		<input type="checkbox" id="sortbycat1" onclick="show()">
+		<label for="sortbycat1">Sort by Category</label>
+
+		<div id="big_table_div1"></div>
+		<div id="big_table_div2"></div>
+	</div>
+
+	<hr>
+	<div id="legend"><table class="legend"><tr><td class="load">Load/Store</td></tr><tr><td class="trans">Transfer</td></tr><tr><td class="stack">Stack</td></tr><tr><td class="shift">Shift</td></tr><tr><td class="logic">Logic</td></tr><tr><td class="arith">Arithmetic</td></tr><tr><td class="inc">Arithmetic: Inc/Dec</td></tr><tr><td class="ctrl">Control Flow</td></tr><tr><td class="bra">Control Flow: Branch</td></tr><tr><td class="flags">Flags</td></tr><tr><td class="kil">KIL</td></tr><tr><td class="nop">NOP</td></tr></table></div>
+	<hr>
+
+	</div>
+
+	<footer>
+	<h2>References</h2>
+
+	<div>
+		<ul>
+			<li><a href="http://anyplatform.net/media/guides/cpus/65xx%20Processor%20Data.txt">Mark Ormston: 65xx Processor Data</a></li>
+			<li><a href="https://csdb.dk/release/?id=185341">groepaz: NMOS 6510 Unintended Opcodes</a></li>
+			<li><a href="http://visual6502.org/wiki/index.php%3Ftitle%3D6502_Opcode_8B_(XAA,_ANE)">Michael Steil, Ed Spittles: 6502 Opcode 8B (XAA, ANE)</a></li>
+			<li><a href="https://www.masswerk.at/6502/6502_instruction_set.html">Norbert Landsteiner: 6502 Instruction Set</a></li>
+			<li><a href="http://www.oxyron.de/html/opcodes02.html">Graham: 6502/6510/8500/8502 Opcode matrix</a></li>
+			<li><a href="http://www.obelisk.me.uk/6502/reference.html">Andrew Jacobs: 6502 Instruction Reference</a></li>
+			<li><a href="https://pastraiser.com/cpu/6502/6502_opcodes.html">Pavel Zima: 6502 instruction set</a></li>
+			<li><a href="http://6502.org/tutorials/65c02opcodes.html">Bruce Clark: 65C02 Opcodes</a></li>
+			<li><a href="http://6502.org/tutorials/65c816opcodes.html">Bruce Clark: 65C816 Opcodes</a></li>
+			<li><a href="http://nparker.llx.com/a2/opcodes.html">Neil Parker: The 6502/65C02/65C816 Instruction Set Decoded</a></li>
+		</ul>
+	</div>
+	</footer>
+
+	</main>
+
+
+</body></html>
