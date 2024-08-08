@@ -48,6 +48,7 @@ void LDA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
     resolve_flags_NZ(cpu, cpu->A);
@@ -81,6 +82,7 @@ void LDX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
     resolve_flags_NZ(cpu, cpu->X);
@@ -114,7 +116,7 @@ void LDY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
-            break;
+            return;
         }
     }
     resolve_flags_NZ(cpu, cpu->Y);
@@ -159,6 +161,7 @@ void STA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }
@@ -182,7 +185,7 @@ void STX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
-            break;
+            return;
         }
     }
 }
@@ -206,7 +209,7 @@ void STY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
-            break;
+            return;
         }
     }
 }
@@ -227,6 +230,7 @@ void LAS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }    
     }
     resolve_flags_NZ(cpu, cpu->A);
@@ -286,7 +290,7 @@ void LAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
-            break;
+            return;
         }
     }
     resolve_flags_NZ(cpu, cpu->A);
@@ -317,6 +321,7 @@ void SAX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }
@@ -336,6 +341,7 @@ void SHA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }
@@ -349,6 +355,7 @@ void SHX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }
@@ -362,6 +369,7 @@ void SHY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }

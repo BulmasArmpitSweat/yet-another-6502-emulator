@@ -1,6 +1,7 @@
 #include "../../include/6502.h"
 #include "../flags.h"
 #include "../mem.h"
+#include "../rotate.h"
 
 void ASL(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
     switch (addressingMode) {
@@ -35,6 +36,7 @@ void ASL(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }
@@ -72,6 +74,7 @@ void LSR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }
@@ -79,51 +82,32 @@ void LSR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void ROL(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
     switch (addressingMode) {
         case ACCUMULATOR: {
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (cpu->A & 0x80) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            cpu->A <<= 1;
-            (C.x == 1) ? set_bit(cpu->A, 0) : reset_bit(cpu->A, 0);
+            l_rotate(cpu, cpu->A);
             resolve_flags_NZ(cpu, cpu->A);
         }
         case ABSOLUTE: {
             ushort addr = f_stack_pull_16(cpu);
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (GET_MEM_ADDR(cpu, addr) & 0x80) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) << 1);
-            (C.x == 1) ? set_bit(cpu->mem[addr], 0) : reset_flag(cpu, 0);
+            l_rotate(cpu, GET_MEM_ADDR(cpu, addr));
             resolve_flags_NZ(cpu, cpu->mem[addr]);
         }
         case X_INDEXED_ABSOLUTE: {
             ushort addr = f_stack_pull_16(cpu) + cpu->X;
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (GET_MEM_ADDR(cpu, addr) & 0x80) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) << 1);
-            (C.x == 1) ? set_bit(cpu->mem[addr], 0) : reset_flag(cpu, 0);
+            l_rotate(cpu, GET_MEM_ADDR(cpu, addr));
             resolve_flags_NZ(cpu, cpu->mem[addr]);
         }
         case ZERO_PAGE: {
             ushort addr = f_stack_pull(cpu);
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (GET_MEM_ADDR(cpu, addr) & 0x80) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) << 1);
-            (C.x == 1) ? set_bit(cpu->mem[addr], 0) : reset_flag(cpu, 0);
+            l_rotate(cpu, GET_MEM_ADDR(cpu, addr));
             resolve_flags_NZ(cpu, cpu->mem[addr]);
         }
         case X_INDEXED_ZERO_PAGE: {
             ushort addr = f_stack_pull(cpu) + cpu->X;
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (GET_MEM_ADDR(cpu, addr) & 0x80) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) << 1);
-            (C.x == 1) ? set_bit(cpu->mem[addr], 0) : reset_flag(cpu, 0);
+            l_rotate(cpu, GET_MEM_ADDR(cpu, addr));
             resolve_flags_NZ(cpu, cpu->mem[addr]);
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }
@@ -151,6 +135,10 @@ void ROR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
             ushort addr = f_stack_pull(cpu) + cpu->X;
             PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) << 1);
         }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
     }
 }
 
@@ -159,51 +147,32 @@ void ROR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void ROR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
     switch (addressingMode) {
         case ACCUMULATOR: {
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (cpu->A & 0x01) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            cpu->A >>= 1;
-            (C.x == 1) ? set_bit(cpu->A, 7) : reset_bit(cpu->A, 7);
+            r_rotate(cpu, cpu->A);
             resolve_flags_NZ(cpu, cpu->A);
         }
         case ABSOLUTE: {
             ushort addr = f_stack_pull_16(cpu);
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (GET_MEM_ADDR(cpu, addr) & 0x01) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) >> 1);
-            (C.x == 1) ? set_bit(cpu->mem[addr], 7) : reset_flag(cpu, 7);
+            r_rotate(cpu, GET_MEM_ADDR(cpu, addr));
             resolve_flags_NZ(cpu, cpu->mem[addr]);
         }
         case X_INDEXED_ABSOLUTE: {
             ushort addr = f_stack_pull_16(cpu) + cpu->X;
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (GET_MEM_ADDR(cpu, addr) & 0x01) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) >> 1);
-            (C.x == 1) ? set_bit(cpu->mem[addr], 7) : reset_flag(cpu, 7);
+            r_rotate(cpu, GET_MEM_ADDR(cpu, addr));
             resolve_flags_NZ(cpu, cpu->mem[addr]);
         }
         case ZERO_PAGE: {
             ushort addr = f_stack_pull(cpu);
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (GET_MEM_ADDR(cpu, addr) & 0x01) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) >> 1);
-            (C.x == 1) ? set_bit(cpu->mem[addr], 7) : reset_flag(cpu, 7);
+            r_rotate(cpu, GET_MEM_ADDR(cpu, addr));
             resolve_flags_NZ(cpu, cpu->mem[addr]);
         }
         case X_INDEXED_ZERO_PAGE: {
             ushort addr = f_stack_pull(cpu) + cpu->X;
-            bit C;
-            C.x = (test_bit(cpu->SR, CARRY)) ? 0 : 1;
-            (GET_MEM_ADDR(cpu, addr) & 0x01) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
-            PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) >> 1);
-            (C.x == 1) ? set_bit(cpu->mem[addr], 7) : reset_flag(cpu, 7);
+            r_rotate(cpu, GET_MEM_ADDR(cpu, addr));
             resolve_flags_NZ(cpu, cpu->mem[addr]);
         }
         default: {
             FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
         }
     }
 }

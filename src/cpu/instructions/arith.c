@@ -3,11 +3,13 @@
 #include "../mem.h"
 #include "../flags.h"
 #include "../../include/stack-manip.h"
+#include "../rotate.h"
+#include "../split.h"
 
 void ADC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
     u_byte operand;
     ushort result;
-    u_byte carry = get_flag(cpu, CARRY);
+    u_byte carry = test_flag(cpu, CARRY);
 
     switch (addressingMode) {
         case IMMEDIATE: {
@@ -202,7 +204,7 @@ void CPY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void SBC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
     u_byte operand;
     ushort result;
-    u_byte carry = get_flag(cpu, CARRY);
+    u_byte carry = test_flag(cpu, CARRY);
 
     switch (addressingMode) {
         case IMMEDIATE: {
@@ -288,6 +290,7 @@ void ARR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
     {
     case IMMEDIATE:
         original = operand = f_stack_pull(cpu);
+        r_rotate(cpu, operand);
         break;
     default:
         FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
@@ -297,10 +300,208 @@ void ARR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
     cpu->A = (cpu->A & operand) >> 1;
     resolve_flags_NZ(cpu, cpu->A);
 
-    (test_bit(cpu->SR, DECIMAL_MODE) && test_bit(cpu, cpu->A) != test_bit(cpu, original)) ? set_flag(cpu, OVERFLOW) : reset_flag(cpu, OVERFLOW);
-    (test_bit(cpu->SR, DECIMAL_MODE) && (original & 0xF0) + (original & 0x10) > 0x50) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
+    (test_flag(cpu, DECIMAL_MODE) && test_bit(cpu->A, 6) != test_bit(original, 6)) ? set_flag(cpu, OVERFLOW) : reset_flag(cpu, OVERFLOW);
 
-    (!test_bit(cpu->SR, DECIMAL_MODE) && test_bit(cpu->A, 6) != test_bit(cpu->A, 5)) ? set_flag(cpu, OVERFLOW) : reset_flag(cpu, OVERFLOW);
-    (!test_bit(cpu->SR, DECIMAL_MODE) && test_bit(cpu->A, 6)) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
+    (test_flag(cpu, DECIMAL_MODE) && (original & 0xF0) + (original & 0x10) > 0x50) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
+
+    (!test_flag(cpu, DECIMAL_MODE) && test_bit(cpu->A, 6) != test_bit(cpu->A, 5)) ? set_flag(cpu, OVERFLOW) : reset_flag(cpu, OVERFLOW);
+    (!test_flag(cpu, DECIMAL_MODE) && test_bit(cpu->A, 6)) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
+}
+
+void ASR(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
+    switch (addressingMode) {
+        case IMMEDIATE: {
+            cpu->A &= f_stack_pull(cpu);
+            set_flag_on_bit(cpu, CARRY, cpu->A, 0);
+            cpu->A >>= 1;
+            (cpu->A == 0) ? set_flag(cpu, ZERO) : reset_flag(cpu, ZERO);
+        }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
+    }
+
+}
+
+void DCP(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
+    byte_raw addr;
+    switch (addressingMode) {
+        case ABSOLUTE: {
+            addr = f_stack_pull_16(cpu);
+            break;
+        }
+        case X_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->X;
+            break;
+        }
+        case Y_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->Y;
+            break;
+        }
+        case ZERO_PAGE: {
+            addr = f_stack_pull(cpu);
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE: {
+            addr = f_stack_pull(cpu) + cpu->X;
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE_INDIRECT: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu)) + cpu->X;
+            break;
+        }
+        case ZERO_PAGE_INDIRECT_Y_INDEXED: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu) + cpu->Y);
+            break;
+        }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
+    }
+    PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) - 1);
+    resolve_flags_NZ(cpu, cpu->A - GET_MEM_ADDR(cpu, addr));
+    (GET_MEM_ADDR(cpu, addr) <= cpu->A) ? set_flag(cpu, CARRY) : set_flag(cpu, CARRY);
+}
+
+void ISC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
+    byte_raw addr;
+    switch (addressingMode) {
+        case ABSOLUTE: {
+            addr = f_stack_pull_16(cpu);
+            break;
+        }
+        case X_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->X;
+            break;
+        }
+        case Y_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->Y;
+            break;
+        }
+        case ZERO_PAGE: {
+            addr = f_stack_pull(cpu);
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE: {
+            addr = f_stack_pull(cpu) + cpu->X;
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE_INDIRECT: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu)) + cpu->X;
+            break;
+        }
+        case ZERO_PAGE_INDIRECT_Y_INDEXED: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu) + cpu->Y);
+            break;
+        }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
+    }
+    PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) + 1);
+    cpu->A = cpu->A + (~GET_MEM_ADDR(cpu, addr) + 1);
+    ((byte_raw)cpu->A < 0) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
+    ((byte_raw)cpu->A > 127 || (byte_raw)cpu->A < -127) ? set_flag(cpu, OVERFLOW) : reset_flag(cpu, OVERFLOW);
+    resolve_flags_NZ(cpu, cpu->A);
+}
+
+void RLA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
+    byte_raw addr;
+    switch (addressingMode) {
+        case ABSOLUTE: {
+            addr = f_stack_pull_16(cpu);
+            break;
+        }
+        case X_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->X;
+            break;
+        }
+        case Y_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->Y;
+            break;
+        }
+        case ZERO_PAGE: {
+            addr = f_stack_pull(cpu);
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE: {
+            addr = f_stack_pull(cpu) + cpu->X;
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE_INDIRECT: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu)) + cpu->X;
+            break;
+        }
+        case ZERO_PAGE_INDIRECT_Y_INDEXED: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu) + cpu->Y);
+            break;
+        }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
+    }
+    byte_raw dat = GET_MEM_ADDR(cpu, addr);
+    l_rotate(cpu, dat);
+    PUT_MEM_ADDR(cpu, addr, dat);
+    cpu->A &= GET_MEM_ADDR(cpu, addr);
+    resolve_flags_NZ(cpu, cpu->A);
+}
+
+void RRA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
+    byte_raw addr;
+    switch (addressingMode) {
+        case ABSOLUTE: {
+            addr = f_stack_pull_16(cpu);
+            break;
+        }
+        case X_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->X;
+            break;
+        }
+        case Y_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->Y;
+            break;
+        }
+        case ZERO_PAGE: {
+            addr = f_stack_pull(cpu);
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE: {
+            addr = f_stack_pull(cpu) + cpu->X;
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE_INDIRECT: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu)) + cpu->X;
+            break;
+        }
+        case ZERO_PAGE_INDIRECT_Y_INDEXED: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu) + cpu->Y);
+            break;
+        }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
+    }
+    byte_raw dat = GET_MEM_ADDR(cpu, addr);
+    r_rotate(cpu, dat);
+    PUT_MEM_ADDR(cpu, addr, dat);
+    ushort result = cpu->A + GET_MEM_ADDR(cpu, addr) + test_flag(cpu, CARRY);
+    (test_flag(cpu, DECIMAL_MODE) && result > 99) ? set_flag(cpu, CARRY) : (result > 255) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
+    byte_raw hi, lo;
+    split_ushort(result, hi, lo);
+    cpu->A += (hi + lo);
 }
 #endif
