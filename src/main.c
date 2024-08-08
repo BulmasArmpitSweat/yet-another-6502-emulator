@@ -5,19 +5,17 @@
 #include "include/6502.h"
 #include "config.h"
 #include "instruction-table.c"
+#include "cpu/init.h"
 
 int main() {
     cpu* main;
-    memset(main, 0, sizeof(&main));
-
-    /* Allocate memory block and registers */
-    /* 6502 could access up to 65535 bytes (64K) of memory */
-    /* This is not the 6510, shut the fuck up */
-    main->mem = calloc(MAX_MEM_LEN, 1);
-    main->f_stack = calloc(MAX_FUNCTION_STACK_LEN, sizeof(byte_raw));
-
-    if (main->mem == NULL) return -1;
-    main->PC = main->mem[RESET_VECTOR];
+    _6502_prepopulate_values(main);
+    /*
+    TODO:
+    _6502_set_reset_vec(main, ...);
+    _6502_set_brk_vec(main, ...);
+    _6502_start_cpu(main)
+    */
     
     instructionTable[main->mem[main->PC]].InstructionPointer
     (instructionTable[main->mem[main->PC]].mode, 

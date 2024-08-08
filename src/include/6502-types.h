@@ -61,36 +61,36 @@ typedef enum ERROR_CODES
     ERR_SDL_RENDERER_ASSERTION_FAILED,
     ERR_SDL_TEXTURE_ASSERTION_FAILED,
     ERR_BUFFER_OVERFLOW,
+    ERR_MEMORY_INITIALIZATION_FAILED,
     ERR_TESTING_ERROR_CODE
 } ERROR_CODES;
 
-    typedef struct
-    {
-        byte_raw SR;
-        u_byte A;
-        u_byte X, Y;
-        u_byte SP;
-        ushort PC;
-        byte_raw* mem;
+typedef struct
+{
+    byte_raw SR;
+    u_byte A;
+    u_byte X, Y;
+    u_byte SP;
+    ushort PC;
+    byte_raw* mem;
+    
+    byte_raw *f_stack;
+    byte_raw FSP;
+    __useconds_t microsecondsPerCycle;
+    bool quit;
 
-        byte_raw *f_stack;
-        byte_raw FSP;
-        __useconds_t microsecondsPerCycle;
-        bool quit;
+    ushort last_accessed_memory_location;
+} cpu;
 
-        ushort last_accessed_memory_location;
-    } cpu;
-
-    typedef struct
-    {
-        void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
-        AddressingModes mode;
-        int cycles;
-        bool page_crossed_cycle_exception;
-    } InstructionInfo;
+typedef struct
+{
+    void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
+    AddressingModes mode;
+    int cycles;
+    bool page_crossed_cycle_exception;
+} InstructionInfo;
 
 // TODO: Update implementation to have better error codes
-
 static inline void FATAL_ERROR(ERROR_CODES code) {
     switch (code) {
         case ERR_UNSUPPORTED_ADDR_MODE:
@@ -100,6 +100,10 @@ static inline void FATAL_ERROR(ERROR_CODES code) {
         case ERR_BUFFER_OVERFLOW:
             fprintf(stderr, "Buffer overflow!\n");
             exit(-1);
+        case ERR_MEMORY_INITIALIZATION_FAILED: {
+            fprintf(stderr, "Failed to initialize memory!\n");
+            exit(-1);
+        }
             break;
         default:
             fprintf(stderr, "Unknown error!\n");
