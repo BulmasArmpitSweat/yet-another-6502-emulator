@@ -12,6 +12,15 @@
 #define OVERFLOW                (byte_raw)(1 << 6)
 #define NEGATIVE                (byte_raw)(1 << 7)
 
+#define CARRY_I                   (byte_raw)0
+#define ZERO_I                    (byte_raw)1
+#define INTERRUPT_DISABLE_I       (byte_raw)2
+#define DECIMAL_MODE_I            (byte_raw)3
+#define BRK_COMMAND_I             (byte_raw)4
+/* Unused                         (byte_raw)5 */
+#define OVERFLOW_I                (byte_raw)6
+#define NEGATIVE_I                (byte_raw)7
+
 static inline void set_flag(cpu* cpu, const byte_raw flag) {
     cpu->SR |= flag;
 }

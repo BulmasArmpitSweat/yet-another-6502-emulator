@@ -12,6 +12,7 @@ static inline byte_raw GET_MEM_ADDR(cpu* cpu, ushort addr) {
 }
 
 static inline ushort GET_MEM_ADDR_ZP(cpu *cpu, byte_raw addr) {
+    if (addr <= sizeof(cpu->mem)) FATAL_ERROR(ERR_BUFFER_OVERFLOW);
     byte_raw low_byte = cpu->mem[addr];
     byte_raw high_byte = cpu->mem[(addr + 1) % 256];
     return (ushort)(high_byte << 8) | high_byte;

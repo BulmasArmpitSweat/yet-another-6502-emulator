@@ -7,9 +7,9 @@
 #include "../split.h"
 
 void ADC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
-    u_byte operand;
+    byte_raw operand;
     ushort result;
-    u_byte carry = test_flag(cpu, CARRY);
+    byte_raw carry = test_flag(cpu, CARRY);
 
     switch (addressingMode) {
         case IMMEDIATE: {
@@ -202,9 +202,9 @@ void CPY(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 }
 
 void SBC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
-    u_byte operand;
+    byte_raw operand;
     ushort result;
-    u_byte carry = test_flag(cpu, CARRY);
+    byte_raw carry = test_flag(cpu, CARRY);
 
     switch (addressingMode) {
         case IMMEDIATE: {
@@ -503,5 +503,110 @@ void RRA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
     byte_raw hi, lo;
     split_ushort(result, hi, lo);
     cpu->A += (hi + lo);
+}
+
+void SBX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
+    byte_raw operand, result;
+    switch (addressingMode) {
+        case IMMEDIATE: {
+            operand = f_stack_pull(cpu);
+        }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
+    }
+    result = (cpu->A & cpu->X) - operand;
+    (result >= 0) ? set_flag(cpu, CARRY) : reset_flag(cpu, CARRY);
+    resolve_flags_NZ(cpu, result);
+
+    cpu->X = result;
+}
+
+void SLO(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
+    byte_raw addr;
+    switch (addressingMode) {
+        case ABSOLUTE: {
+            addr = f_stack_pull_16(cpu);
+            break;
+        }
+        case X_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->X;
+            break;
+        }
+        case Y_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->Y;
+            break;
+        }
+        case ZERO_PAGE: {
+            addr = f_stack_pull(cpu);
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE: {
+            addr = f_stack_pull(cpu) + cpu->X;
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE_INDIRECT: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu)) + cpu->X;
+            break;
+        }
+        case ZERO_PAGE_INDIRECT_Y_INDEXED: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu) + cpu->Y);
+            break;
+        }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
+    }
+    PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) << 1);
+    cpu->A &= GET_MEM_ADDR(cpu, addr);
+    resolve_flags_NZ(cpu, cpu->A);
+    (test_flag(cpu, NEGATIVE)) ? set_flag_on_bit(cpu, CARRY, cpu->A, 7) : ((void)0);
+}
+
+void SRE(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
+    byte_raw addr;
+    switch (addressingMode) {
+        case ABSOLUTE: {
+            addr = f_stack_pull_16(cpu);
+            break;
+        }
+        case X_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->X;
+            break;
+        }
+        case Y_INDEXED_ABSOLUTE: {
+            addr = f_stack_pull_16(cpu) + cpu->Y;
+            break;
+        }
+        case ZERO_PAGE: {
+            addr = f_stack_pull(cpu);
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE: {
+            addr = f_stack_pull(cpu) + cpu->X;
+            break;
+        }
+        case X_INDEXED_ZERO_PAGE_INDIRECT: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu)) + cpu->X;
+            break;
+        }
+        case ZERO_PAGE_INDIRECT_Y_INDEXED: {
+            addr = GET_MEM_ADDR(cpu, 
+                        f_stack_pull(cpu) + cpu->Y);
+            break;
+        }
+        default: {
+            FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
+            return;
+        }
+    }
+
+    PUT_MEM_ADDR(cpu, addr, GET_MEM_ADDR(cpu, addr) >> 1);
+    cpu->A ^= GET_MEM_ADDR(cpu, addr);
 }
 #endif
