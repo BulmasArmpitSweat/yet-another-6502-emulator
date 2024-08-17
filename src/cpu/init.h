@@ -3,6 +3,8 @@
 
 #include "../include/6502-types.h"
 
+#define CONFIG_FILE_PATH "./config.toml"
+
 static inline void _6502_start_cpu(cpu* cpu) {
     cpu->PC = RESET_VECTOR;
 }

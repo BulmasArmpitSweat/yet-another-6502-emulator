@@ -1,1 +1,8 @@
-// TODO
+#ifndef INSTRUCTION_GIVEN_MORE_ATTENTION_THAN_IT_REASONABLY_DESERVES
+#define INSTRUCTION_GIVEN_MORE_ATTENTION_THAN_IT_REASONABLY_DESERVES
+
+#include "6502-types.h"
+
+void NOP(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
+
+#endif /* INSTRUCTION_GIVEN_MORE_ATTENTION_THAN_IT_REASONABLY_DESERVES */
