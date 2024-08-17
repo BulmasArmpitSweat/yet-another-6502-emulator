@@ -62,6 +62,7 @@ typedef enum ERROR_CODES
     ERR_SDL_TEXTURE_ASSERTION_FAILED,
     ERR_BUFFER_OVERFLOW,
     ERR_MEMORY_INITIALIZATION_FAILED,
+    ERR_FILE_READ_ERROR,
     ERR_TESTING_ERROR_CODE
 } ERROR_CODES;
 
@@ -93,22 +94,27 @@ typedef struct
 // TODO: Update implementation to have better error codes
 static inline void FATAL_ERROR(ERROR_CODES code) {
     switch (code) {
-        case ERR_UNSUPPORTED_ADDR_MODE:
+        case ERR_UNSUPPORTED_ADDR_MODE: {
             fprintf(stderr, "Unsupported addr mode!\n");
-            exit(-1);
             break;
-        case ERR_BUFFER_OVERFLOW:
+        }
+        case ERR_BUFFER_OVERFLOW: {
             fprintf(stderr, "Buffer overflow!\n");
-            exit(-1);
+            break;
+        }
         case ERR_MEMORY_INITIALIZATION_FAILED: {
             fprintf(stderr, "Failed to initialize memory!\n");
-            exit(-1);
-        }
             break;
+        }
+        case ERR_FILE_READ_ERROR: {
+            fprintf(stderr, "Failed to open file!\n");
+            break;
+        }
+        // When all error codes are filled in, this will no longer be necessary. Right now though, it is.
         default:
             fprintf(stderr, "Unknown error!\n");
-            exit(-1);
             break;
     }
+    exit(-1);
 }
 #endif /* C8014FEB_51B9_4C92_98BF_E7C5D92B2E36 */

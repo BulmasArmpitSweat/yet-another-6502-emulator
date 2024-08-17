@@ -54,8 +54,8 @@ static inline bool test_bit(byte_raw reference, char index) {
     return (reference & (1 << index)) ? true : false;
 }
 
-#define set_flag_on_bit(cpu, flag, dat, index) (test_bit(dat, index)) ? set_flag(cpu, flag) : reset_flag(cpu, flag);
-#define set_bit_on_flag(cpu, flag, dat, index) (test_flag(cpu, flag)) ? set_bit(dat, index) : reset_bit(dat, index);
+#define set_flag_on_bit(cpu, flag, dat, index) (test_bit(dat, index)) ? set_flag(cpu, flag) : reset_flag(cpu, flag)
+#define set_bit_on_flag(cpu, flag, dat, index) (test_flag(cpu, flag)) ? set_bit(dat, index) : reset_bit(dat, index)
 
 static inline void resolve_flags_NZ(cpu* cpu, byte_raw reference) {
     if (reference == 0) set_flag(cpu, ZERO);
