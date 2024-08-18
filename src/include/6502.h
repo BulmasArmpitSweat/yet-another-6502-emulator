@@ -35,6 +35,9 @@
     ------------------------------------------------------------------------------------------------------
 */
 
+/*
+Instructions:
+
 void ADC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // A + M + C -> A, C
 void AND(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // A & M → A
 void ASL(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);       // C <- /M7...M0/ <- 0
@@ -142,4 +145,5 @@ void USBC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crosse
 
 void SHS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Transfer Accumulator "AND" Index Register X to Stack Pointer then Store Stack Pointer "AND" Hi-Byte In Memory
 #endif
+*/
 #endif /* EB4D9005_CF3A_40AB_8349_0F425DA6B566 */

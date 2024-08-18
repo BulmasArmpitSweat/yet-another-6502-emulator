@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#define CONFIG_FILE_PATH "./config.toml"
+
 typedef signed char byte_raw;
 typedef unsigned char u_byte;
 
