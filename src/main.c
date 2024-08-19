@@ -6,14 +6,14 @@
 #include <ctype.h>
 #include <unistd.h>
 
-#include "config-file-handling.h"
+// #include "config-file-handling.h"
 #include "include/6502.h"
 #include "instruction-table.c"
 #include "cpu/init.h"
 
 int main() {
     
-    FILE* config = resolve_config_file();
+    // FILE* config = resolve_config_file();
     cpu* main;
     _6502_prepopulate_values(main);
 
