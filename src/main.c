@@ -16,6 +16,7 @@ int main() {
     // FILE* config = resolve_config_file();
     cpu* main;
     _6502_prepopulate_values(main);
+    
 
     
     instructionTable[main->mem[main->PC]].InstructionPointer

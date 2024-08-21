@@ -2,11 +2,13 @@
 #define JFJKJ_DJSJ3N_DJ3UN_38UMNVII
 
 #include "../include/6502-types.h"
+#include <pthread.h>
 
-#define CONFIG_FILE_PATH "./config.toml"
+// #define CONFIG_FILE_PATH "./config.toml"
 
 static inline void _6502_start_cpu(cpu* cpu) {
     cpu->PC = RESET_VECTOR;
+    pthread_t thread;
 }
 
 static inline void _6502_prepopulate_values(cpu* cpu) {
@@ -24,11 +26,7 @@ static inline void _6502_prepopulate_values(cpu* cpu) {
     (cpu->f_stack == NULL) ? FATAL_ERROR(ERR_MEMORY_INITIALIZATION_FAILED):((void)0);
 
     /* For when we actually have a software tty using SDL */
-    cpu->quit = false;
-
-    /* Will probably be removed at a later date */
-    cpu->last_accessed_memory_location = 0;
-    cpu->microsecondsPerCycle = 0;
+    cpu->halt = false;
     
     /* VV Fuck you I don't care that this is obselete code VV */
     cpu->mem = (byte_raw *)malloc(MAX_MEM_LEN * sizeof(byte_raw));

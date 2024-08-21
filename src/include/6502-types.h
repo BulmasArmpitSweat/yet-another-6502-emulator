@@ -8,6 +8,8 @@
 
 #define CONFIG_FILE_PATH "./config.toml"
 
+#define NANOSECOND_MULTIPLIER 1000000000
+
 typedef signed char byte_raw;
 typedef unsigned char u_byte;
 
@@ -79,17 +81,17 @@ typedef struct
     
     byte_raw *f_stack;
     byte_raw FSP;
-    __useconds_t microsecondsPerCycle;
-    bool quit;
+    bool halt;
 
     ushort last_accessed_memory_location;
+    uint64_t nanoseconds_per_cycle;
 } cpu;
 
 typedef struct
 {
-    void (*InstructionPointer)(AddressingModes, int cycles, cpu *, bool page_crossed_cycle_exception);
-    AddressingModes mode;
+    void (*InstructionPointer)(AddressingModes addr_mode, int cycles, cpu *, bool page_crossed_cycle_exception);
     int cycles;
+    AddressingModes mode;
     bool page_crossed_cycle_exception;
 } InstructionInfo;
 
