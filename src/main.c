@@ -12,11 +12,14 @@
 #include "cpu/init.h"
 
 int main() {
-    
+    char hertz_level;
     // FILE* config = resolve_config_file();
     cpu* main;
     _6502_prepopulate_values(main);
-    
+    printf("Clock Speed? (default: 1MHz): ");
+    if (scanf("%s%cHz", main->configured_hertz, &hertz_level) == 1) {
+        
+    }
 
     
     instructionTable[main->mem[main->PC]].InstructionPointer

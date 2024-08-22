@@ -154,6 +154,7 @@ static inline void* cpu_thread_func(void* arg) {
     }
     pthread_mutex_destroy(&mq->mutex_lock);
     pthread_cond_destroy(&mq->conditional);
+    free(main->configured_hertz);
     free(main);
     free(mq);
     return NULL;
