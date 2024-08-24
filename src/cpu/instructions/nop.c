@@ -40,4 +40,5 @@ void NOP(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
     }
     // Implement when cycle system is working
     // NOTE: I might not actually have to add anything, since handling the cycles it takes up will be external. I just need to extract the required data from the function stack, and discard it.
+    // NOTE 2: I won't have to implement it
 }

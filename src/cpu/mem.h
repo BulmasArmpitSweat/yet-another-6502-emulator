@@ -1,13 +1,20 @@
 #ifndef B7C8AE76_51F7_4235_9EF8_88084D24D1FC
 #define B7C8AE76_51F7_4235_9EF8_88084D24D1FC
 #include "../include/6502-types.h"
+#include <ctype.h>
+#include <string.h>
 
 static inline byte_raw GET_MEM_PC(cpu* cpu) {
     return cpu->mem[cpu->PC];
 }
 
 static inline byte_raw GET_MEM_ADDR(cpu* cpu, ushort addr) {
-    if (addr <= sizeof(cpu->mem)) FATAL_ERROR(ERR_BUFFER_OVERFLOW);
+    if (addr > sizeof(cpu->mem)) FATAL_ERROR(ERR_BUFFER_OVERFLOW);
+    return cpu->mem[addr];
+}
+
+/* Get memory zero-page */
+static inline byte_raw GET_MEM_ADDR_ZP(cpu* cpu, byte_raw addr) {
     return cpu->mem[addr];
 }
 
@@ -24,5 +31,14 @@ static inline void PUT_MEM_PC(cpu* cpu, byte_raw data) {
 
 static inline void PUT_MEM_ADDR(cpu* cpu, ushort addr, byte_raw data) {
     cpu->mem[addr] = data;
+}
+
+static inline bool test_char(char input, char* reference) {
+    input = tolower(input);
+    int referenceLen = strlen(reference);
+    for (int i = 0; i < referenceLen; i++)
+        if (input == reference[i])
+            return true;
+    return false;
 }
 #endif /* B7C8AE76_51F7_4235_9EF8_88084D24D1FC */

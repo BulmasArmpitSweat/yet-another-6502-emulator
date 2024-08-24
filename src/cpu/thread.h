@@ -4,10 +4,8 @@
 #include "../include/6502-types.h"
 #include "../include/stack-manip.h"
 #include "../instruction-table.c"
-#include "init.h"
 #include "mem.h"
 #include <bits/pthreadtypes.h>
-#include <cstdio>
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
@@ -17,6 +15,9 @@
 typedef enum {
     MSG_NOOP,
     MSG_RESET,
+    MSG_PAUSE,
+    MSG_RESUME,
+    MSG_STEP,
     MSG_HALT,
     MSG_LOAD_F_STACK,
     MSG_LOAD_F_STACK_16,
@@ -43,47 +44,48 @@ typedef struct {
 } MessageQueueObj;
 
 static Message NO_OP = { .type = MSG_NOOP };
+static MessageQueueObj mq;
 
 static inline void queue_init_obj(MessageQueueObj* obj) {
-    obj->front = 0;
-    obj->rear = 0;
-    obj->count = 0;
-    pthread_mutex_init(&obj->mutex_lock, NULL);
-    pthread_cond_init(&obj->conditional, NULL);
+    mq.front = 0;
+    mq.rear = 0;
+    mq.count = 0;
+    pthread_mutex_init(&mq.mutex_lock, NULL);
+    pthread_cond_init(&mq.conditional, NULL);
 }
 
-static inline void enqueue_message(MessageQueueObj* obj, Message message) {
-    pthread_mutex_lock(&obj->mutex_lock);
+static inline void enqueue_message(Message message) {
+    pthread_mutex_lock(&mq.mutex_lock);
 
     // Wait if queue is full
-    while (obj->count == QUEUE_LENGTH)
-        pthread_cond_wait(&obj->conditional, &obj->mutex_lock);
+    while (mq.count == QUEUE_LENGTH)
+        pthread_cond_wait(&mq.conditional, &mq.mutex_lock);
 
-    obj->queue[obj->rear] = message;
-    obj-> rear = (obj->rear + 1) % QUEUE_LENGTH;
-    obj->count++;
+    mq.queue[mq.rear] = message;
+    mq. rear = (mq.rear + 1) % QUEUE_LENGTH;
+    mq.count++;
 
-    pthread_cond_signal(&obj->conditional);
-    pthread_mutex_unlock(&obj->mutex_lock);
+    pthread_cond_signal(&mq.conditional);
+    pthread_mutex_unlock(&mq.mutex_lock);
 }
 
-static inline Message dequeue_message(MessageQueueObj* obj) {
-    pthread_mutex_lock(&obj->mutex_lock);
+static inline Message dequeue_message() {
+    pthread_mutex_lock(&mq.mutex_lock);
 
     // Wait if queue is empty
-    if (obj->count == 0) {
-        pthread_mutex_unlock(&obj->mutex_lock);
+    if (mq.count == 0) {
+        pthread_mutex_unlock(&mq.mutex_lock);
         return NO_OP;
     }
-    while (obj->count == 0)
-        pthread_cond_wait(&obj->conditional, &obj->mutex_lock);
+    while (mq.count == 0)
+        pthread_cond_wait(&mq.conditional, &mq.mutex_lock);
 
-    Message message = obj->queue[obj->front];
-    obj->front = (obj->front + 1) % QUEUE_LENGTH;
-    obj->count--;
+    Message message = mq.queue[mq.front];
+    mq.front = (mq.front + 1) % QUEUE_LENGTH;
+    mq.count--;
 
-    pthread_cond_signal(&obj->conditional);
-    pthread_mutex_unlock(&obj->mutex_lock);
+    pthread_cond_signal(&mq.conditional);
+    pthread_mutex_unlock(&mq.mutex_lock);
 
     return message;
 }
@@ -94,11 +96,13 @@ typedef struct {
 } init_obj;
 
 static inline void* cpu_thread_func(void* arg) {
+        bool paused = true;
+        int step = 0;
         init_obj* init = (init_obj*)arg;
         
         cpu* main = &init->CPUObjInit;
-        MessageQueueObj* mq = &init->MObjInit;
-        queue_init_obj(mq);
+        mq = init->MObjInit;
+        queue_init_obj(&mq);
 
         struct timespec ts;
 
@@ -109,7 +113,7 @@ static inline void* cpu_thread_func(void* arg) {
 
             ts.tv_sec = (base_cycles + extra_cycles) * (main->nanoseconds_per_cycle / NANOSECOND_MULTIPLIER);
             ts.tv_nsec = (base_cycles + extra_cycles) * (main->nanoseconds_per_cycle % NANOSECOND_MULTIPLIER);
-            Message message = dequeue_message(mq);
+            Message message = dequeue_message();
             if (message.type != NO_OP.type) {
                 switch (message.type) {
                 case MSG_LOAD_CPU_ATTR: {
@@ -117,10 +121,9 @@ static inline void* cpu_thread_func(void* arg) {
                     break;
                 }
                 case MSG_DESTROY: {
-                    pthread_mutex_destroy(&mq->mutex_lock);
-                    pthread_cond_destroy(&mq->conditional);
+                    pthread_mutex_destroy(&mq.mutex_lock);
+                    pthread_cond_destroy(&mq.conditional);
                     free(main);
-                    free(mq);
                     return NULL;
                 }
                 case MSG_LOAD_F_STACK: {
@@ -140,6 +143,16 @@ static inline void* cpu_thread_func(void* arg) {
                     main->halt = true;
                     break;
                 }
+                case MSG_PAUSE: {
+                    paused = true;
+                    break;
+                }
+                case MSG_RESUME: {
+                    paused = false;
+                }
+                case MSG_STEP: {
+                    step += *(int*)message.data;
+                }
                 case MSG_RESET: {
                     main->PC = RESET_VECTOR;
                     break;
@@ -148,15 +161,18 @@ static inline void* cpu_thread_func(void* arg) {
                     break;
                 }
             }
+            if (paused == true && step == 0) {
+                continue;
+            }
             instructionTable[main->mem[main->PC++]].InstructionPointer(instructionTable[main->mem[main->PC++]].mode, instructionTable[main->mem[main->PC++]].cycles, main, instructionTable[main->mem[main->PC++]].page_crossed_cycle_exception);
             nanosleep(&ts, NULL);
+            step--;
         }
     }
-    pthread_mutex_destroy(&mq->mutex_lock);
-    pthread_cond_destroy(&mq->conditional);
+    pthread_mutex_destroy(&mq.mutex_lock);
+    pthread_cond_destroy(&mq.conditional);
     free(main->configured_hertz);
     free(main);
-    free(mq);
     return NULL;
 }
 #endif /* JFKJF_DFII4RNF_XKXJDFJ */

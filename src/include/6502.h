@@ -141,7 +141,6 @@ void LAS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
 void DCP(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void SBX(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 void ISC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
-void USBC(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);
 
 void SHS(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception);   // Transfer Accumulator "AND" Index Register X to Stack Pointer then Store Stack Pointer "AND" Hi-Byte In Memory
 #endif

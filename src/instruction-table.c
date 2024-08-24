@@ -1,3 +1,6 @@
+#ifndef MFDKDK_KF4MFKKD_FJ4JFJ_DK
+#define MFDKDK_KF4MFKKD_FJ4JFJ_DK
+
 #include "include/6502.h"
 #include "config.h"
 
@@ -554,3 +557,5 @@ InstructionInfo instructionTable[256] = {
     { *NOP, 2,    IMPLIED, true },
 };
 #endif
+
+#endif /* MFDKDK_KF4MFKKD_FJ4JFJ_DK */

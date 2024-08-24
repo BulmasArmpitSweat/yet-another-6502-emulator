@@ -21,7 +21,6 @@
   ((byte) & 0x02 ? '1' : '0'), \
   ((byte) & 0x01 ? '1' : '0') 
 
-
 typedef signed char byte_raw;
 typedef unsigned char u_byte;
 
@@ -53,6 +52,8 @@ typedef enum
     NOTHING,                           // N/A
 } AddressingModes;
 
+#define PAGE_SIZE                      0xFF
+
 #define MAX_FUNCTION_STACK_LEN         5
 #define MAX_MEM_LEN                    UINT16_MAX
 
@@ -72,12 +73,13 @@ typedef enum ERROR_CODES
     ERR_NO_INPUT_PROVIDED,
     ERR_REGISTERS_NOT_PRESENT,
     ERR_FUNCTION_POINTER_MISALIGNED,
-    ERR_SDL_INIT_FAILED,
+    ERR_SDL_INITIALIZATION_FAILED,
     ERR_SDL_WINDOW_ASSERTION_FAILED,
     ERR_SDL_RENDERER_ASSERTION_FAILED,
     ERR_SDL_TEXTURE_ASSERTION_FAILED,
-    ERR_BUFFER_OVERFLOW,
     ERR_MEMORY_INITIALIZATION_FAILED,
+    ERR_THREAD_INITIALIZATION_FAILED,
+    ERR_BUFFER_OVERFLOW,
     ERR_FILE_READ_ERROR,
     ERR_TESTING_ERROR_CODE
 } ERROR_CODES;
@@ -126,6 +128,10 @@ static inline void FATAL_ERROR(ERROR_CODES code) {
         }
         case ERR_FILE_READ_ERROR: {
             fprintf(stderr, "Failed to open file!\n");
+            break;
+        }
+        case ERR_THREAD_INITIALIZATION_FAILED: {
+            fprintf(stderr, "Failed to start the main CPU thread!\n");
             break;
         }
         // When all error codes are filled in, this will no longer be necessary. Right now though, it is.

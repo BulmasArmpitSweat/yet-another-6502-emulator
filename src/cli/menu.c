@@ -111,6 +111,7 @@ int resolve_cli_input(char *input, cpu *main) {
             char* command = malloc(1);
             if (sscanf(input, "%c %hd-%hd", command, &start, &end) != 3)
                 goto command_parse_failed;
+            /* Discard first char because I can */
             free(command);
             
             printf("Printing memory contents from 0x%02x to 0x%02x:\n   ", main->mem[start], main->mem[end]);
