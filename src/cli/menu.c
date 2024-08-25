@@ -1,7 +1,9 @@
 #include "menu.h"
 #include "../cpu/flags.h"
 #include "../include/6502-types.h"
+#include "../cpu/mem.h"
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -114,22 +116,42 @@ int resolve_cli_input(char *input, cpu *main) {
             /* Discard first char because I can */
             free(command);
             
-            printf("Printing memory contents from 0x%02x to 0x%02x:\n   ", main->mem[start], main->mem[end]);
-            
-            for (ushort i = start, printed = 0; i <= end; i++, printed++) {
-                if (printed == 0)
-                    printf("0x%04x:: ", main->mem[i]);
-            
-                printf("%02x ", main->mem[i]);
-            
-                if (printed % 10 == 0 && printed != 0) {
-                    printf("|\n");
-                    printf("0x%04x:: ", main->mem[i]);
+            int num_digits = count_digits(end);
+            printf("Printing memory contents from 0x%04x (decimal: %*d) to 0x%04x (decimal: %*d):\n", 
+                   start, num_digits, start, end, num_digits, end);
+
+            // Process the memory contents from start to end
+            for (int i = start - (start % 16); i < end + (16 - (end % 16)) % 16; i++) {
+                if (i % 16 == 0) {
+                    if (i != start) {
+                        printf("|\n");  // End the previous line
+                    }
+                    printf("0x%04x (decimal: %*d) -> 0x%04x (decimal: %*d):: ", 
+                           i, num_digits, i, (i > end) ? end : i + 15, num_digits, (i > end) ? end : i + 15);
                 }
+                if (i < start)
+                    printf("-- ");  // Print the memory contents
+                else if (i > end)
+                    printf("-- ");  // Print the memory contents
+                else
+                    printf("%02x ", (unsigned char)main->mem[i]);  // Print the memory contents
             }
+
+    printf("|\n");  // Final newline after loop completes
         }
     }
     return 0;
 command_parse_failed:
     return COMMAND_PARSE_FAILED;
+}
+
+bool get_yes_no_response(char *prompt, bool _default, int max_len) {
+    char input[max_len];
+    while (true) {
+        printf("%s : (default : %s): ", prompt, (_default == true) ? "yes" : "no");
+        scanf("%s", input);
+        if (strcmp(input, "\n") == 0)
+            return _default;
+    }
+    return false;
 }

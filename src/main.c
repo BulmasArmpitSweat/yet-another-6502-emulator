@@ -5,7 +5,10 @@
 #include <unistd.h>
 #include <ctype.h>
 
+#include <sys/syscall.h>
+
 // #include "config-file-handling.h"
+#include "include/6502-types.h"
 #include "include/6502.h"
 #include "cpu/init.h"
 #include "cpu/mem.h"
@@ -28,10 +31,12 @@ int main() {
         }
         if (confirm == 'n' || confirm == '\n')
             break;
+        _6502_mount_external_file(main);
     }
+    main->PC = RESET_VECTOR;
     _6502_start_cpu(main);
 
     free(main->f_stack);
     free(main->mem);
-    return 0;
+    syscall(SYS_exit, 0);
 }

@@ -37,7 +37,6 @@ static inline void _6502_prepopulate_values(cpu* cpu) {
     cpu->f_stack = (byte_raw* )calloc(MAX_FUNCTION_STACK_LEN, sizeof(byte_raw));
     (cpu->f_stack == NULL) ? FATAL_ERROR(ERR_MEMORY_INITIALIZATION_FAILED):((void)0);
 
-    /* For when we actually have a software tty using SDL */
     cpu->halt = false;
     
     /* VV Fuck you I don't care that this is obsolete code VV */
