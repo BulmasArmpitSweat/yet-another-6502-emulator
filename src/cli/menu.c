@@ -13,6 +13,10 @@ int resolve_cli_input(char *input, cpu *main) {
     if (len == 0 || input[1] != ' ' )
         goto command_parse_failed;
     switch (input[0]) {
+        case 'e':
+        case 'E': {
+            return 127;
+        }
         case 'd':
         case 'D': {
             char* command = malloc(sizeof(char) * 8);
@@ -145,13 +149,21 @@ command_parse_failed:
     return COMMAND_PARSE_FAILED;
 }
 
-bool get_yes_no_response(char *prompt, bool _default, int max_len) {
-    char input[max_len];
+bool get_yes_no_response(char *prompt, bool _default) {
+    char input;
     while (true) {
         printf("%s : (default : %s): ", prompt, (_default == true) ? "yes" : "no");
-        scanf("%s", input);
-        if (strcmp(input, "\n") == 0)
+        scanf("%c", &input);
+        input = tolower(input);
+        char tests[] = {'y', 'n', '\n'};
+        if (test_char(input, tests) == false) {
+            printf("That's not a valid input, kiddo\n");
+            continue;
+        }
+        if (strcmp(&input, "\n") == 0)
             return _default;
+        if (strcmp(&input, "n") == 0)
+            return false;
+        return true;            
     }
-    return false;
 }

@@ -1,4 +1,4 @@
-#include "stack.h"
+#include "../include/stack-manip.h"
 
 void stack_push(cpu *cpu, byte_raw src) {
     cpu->mem[cpu->SP++] = src;
@@ -35,3 +35,4 @@ unsigned short f_stack_pull_16(cpu *cpu) {
 }
 
 // int *(*(*(**x[])(char*, int*(*)(char*)))[])(char**, char*(*)());
+// This is valid C btw
