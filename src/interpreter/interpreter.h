@@ -26,7 +26,7 @@ typedef struct instruction_token {
 #define COMPILER_ERROR(message, line_number, ...) fprintf(stderr, "Error on line %d: " message, line_number, __VA_ARGS__); exit(-1)
 #define ALLOC_NODE(node) node.next = malloc(sizeof(instruction_token)); node = *node.next
 
-void compile_file(FILE* in_file, FILE* out_file, instruction_token token_list);
+void compile_file(char* in_file, FILE* out_file, const char* out_file_path, instruction_token token_list);
 instruction_token parse_line(char* line, int line_num);
 
 #endif /* FDJKDJF_DJ333HFJD_DJW */

@@ -5,8 +5,19 @@
 #include "interpreter.h"
 #include "../cpu/mem.h"
 
-void compile_file(FILE* in_file, FILE* out_file, instruction_token token_list) {
-	
+void compile_file(char* in_file, FILE* out_file, const char* out_file_path, instruction_token token_list) {
+    FILE* input_file = fopen(in_file, "r");
+    out_file = fopen(out_file_path, "wb");
+    int line_num = 0;
+    while (!feof(input_file)) {
+        char* line;
+        fscanf(input_file, "%s\n", line);
+        instruction_token token_list = parse_line(line, line_num);
+        instruction_token ptr = token_list;
+        ptr = *ptr.next;
+
+        line_num++;
+    }
 }
 
 instruction_token parse_line(char* line, int line_num) {
@@ -21,7 +32,7 @@ instruction_token parse_line(char* line, int line_num) {
     ptr->next = NULL;
     line_ptr = 3;
 
-    while (line[line_ptr] != '\0' && line[line_ptr] != '\n') {
+    while (line[line_ptr] != '\0' && line[line_ptr] != '\0') {
         last_char = line[line_ptr];
         switch (line[line_ptr]) {
             case 'A': {
@@ -94,7 +105,7 @@ instruction_token parse_line(char* line, int line_num) {
                 break;
             }
             case ')': {
-                char tests[] = "\n,";
+                char tests[] = "\0,";
                 if (!test_char(line[line_ptr + 1], tests)) {
                     COMPILER_ERROR("Unexpected closing bracket at line %d, position %d.", line_num, line_num, line_ptr);
                 } else {
@@ -104,7 +115,7 @@ instruction_token parse_line(char* line, int line_num) {
                     ptr->data = NULL;
                     ptr->next = NULL;
 
-                    if (line[line_ptr + 1] == '\n') {
+                    if (line[line_ptr + 1] == '\0') {
                         return result;
                     }
 
@@ -130,7 +141,7 @@ instruction_token parse_line(char* line, int line_num) {
             case 'Y':
             case 'x':
             case 'y': {
-                char tests[] = "\n)";
+                char tests[] = "\0)";
                 if (!test_char(line[line_ptr + 1], tests)) {
                     COMPILER_ERROR("Unexpected index register definition at line %d, position %d.", line_num, line_num, line_ptr);
                 } else {
@@ -140,7 +151,7 @@ instruction_token parse_line(char* line, int line_num) {
                     ptr->data = (void*)(long)line[line_ptr];
                     ptr->next = NULL;
 
-                    if (line[line_ptr + 1] == '\n') {
+                    if (line[line_ptr + 1] == '\0') {
                         return result;
                     }
 
