@@ -631,42 +631,23 @@ static inline float Q_rsqrt(float number)
 void XXA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed_cycle_exception) {
     if (addressingMode != IMMEDIATE)
         FATAL_ERROR(ERR_UNSUPPORTED_ADDR_MODE);
-    
-    // Create potential options as base value, and bitmask
+
     const u_byte vectors[5] = { 0x00, 0xEE, 0XEF, 0XFE, 0XFF };
     const u_byte bitmask = 0b010111000;
 
-    // Leaving random variables uninitialized to increase potential randomness
-    // Keep things volatile to make GCC and other compilers happy
     volatile byte_raw operation_result;
     volatile u_byte vector_offset, vector_selection;
-    
-    // Generate shitty random number
     u_byte low_quality_rand = rand();
-
-    // Extract value from UNIX standard entropy pool
     FILE* random = fopen("/dev/urandom", "r");
     if (random == NULL)
         FATAL_ERROR(ERR_FILE_READ_ERROR);
     fscanf(random, "%c", &operation_result);
     fclose(random);
-
-    // XOR result because I'm ✨️ fancy ✨️
     operation_result ^= bitmask;
-
-    // AND low quality random number with high-quality one.
     vector_offset = low_quality_rand & operation_result;
-    
-    // Decide chosen vector from array using high quality random
     vector_selection = vector_offset % 5;
-
-    // Add offset to chosen vector to high quality vector
     operation_result += vectors[vector_selection] + vector_offset;
-    
-    // Finally, perform core operation
     cpu->A = (cpu->A & operation_result ^ low_quality_rand) & cpu->X & f_stack_pull(cpu);
-
-    // Fuck you. (fast inverse square root's your ass)
     cpu->A = (u_byte)Q_rsqrt((float)cpu->A++);
 }
 #endif

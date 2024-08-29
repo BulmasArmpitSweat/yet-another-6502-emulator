@@ -1,3 +1,6 @@
 [submodule "lib"]
 	path = lib/tomlc99
 	url = https://github.com/cktan/tomlc99.git
+[submodule "src/asm_compiler"]
+	path = src/asm_compiler
+	url = https://github.com/erhanbaris/timu6502asm.git

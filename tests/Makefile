@@ -8,3 +8,6 @@ build_XXA:
 
 build_print_mem:
 	$(CC) mem_print_test.c -o mem_print_test
+
+build_sscanf_test:
+	$(CC) sscanf_test.c -o sscanf_test

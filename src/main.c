@@ -24,6 +24,7 @@ int main() {
         if (resolve_cli_input(input, main_cpu) == 127)
             break;
     }
+    
     _6502_un_start_cpu();
     syscall(SYS_exit, 0);
 }
