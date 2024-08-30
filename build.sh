@@ -1,6 +1,6 @@
 #! /bin/bash
 
-srcs=(src/cpu/stack-manip \
+srcs=(src/cpu/stack_manip \
     src/cpu/instructions/arith \
     src/cpu/instructions/bra \
     src/cpu/instructions/ctrl \
@@ -25,14 +25,14 @@ srcs=(src/cpu/stack-manip \
 #     src/cpu/instructions \
 #     src/cli)
 
-if [[ "${0}" == "clean" ]]; then
+if [[ "${1}" == "clean" ]]; then
     printf "Cleaning directory structure...\n"
     for item in "${srcs[@]}"; do
         if find . -maxdepth 1 -name "${item}.o" | grep -q .; then
             rm "${item}.o"
         fi
     done
-elif [[ "${0}" == "build" ]]; then
+elif [[ "${1}" == "build" ]]; then
     index=0
     for item in "${srcs[@]}"; do
         if find . -maxdepth 1 -name "${item}.o" | grep -q .; then

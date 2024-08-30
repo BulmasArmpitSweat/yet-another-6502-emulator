@@ -4,7 +4,7 @@ rust_CC = cargo
 .PHONY: build clean
 
 build:
-	./build.sh "build"
+	./build.sh build
 
 clean:
-	./build.sh "clean"
+	./build.sh clean
