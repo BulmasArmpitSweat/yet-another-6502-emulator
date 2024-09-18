@@ -122,6 +122,10 @@ void* cpu_thread_func(void* arg) {
             if (paused == true && step == 0) {
                 continue;
             }
+            
+            /* The very heart of the CPU */
+            /* This is actually what runs the instructions, and increments the Program counter */
+            /* In simple terms: this is where the magic happens */
             instructionTable[main->mem[main->PC++]].InstructionPointer(instructionTable[main->mem[main->PC++]].mode, instructionTable[main->mem[main->PC++]].cycles, main, instructionTable[main->mem[main->PC++]].page_crossed_cycle_exception);
             nanosleep(&ts, NULL);
             step--;

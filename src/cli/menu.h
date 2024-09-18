@@ -5,7 +5,7 @@
 
 #define COMMAND_PARSE_FAILED -127
 
-int resolve_cli_input(char* input, cpu* main);
+int resolve_cli_input(char *input, cpu *main);
 bool get_yes_no_response(char* prompt, bool _default);
 
 #endif /* DJF_3IJ4_FJ44JWJF_DFJI4 */

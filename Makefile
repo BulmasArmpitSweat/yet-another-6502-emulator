@@ -1,10 +1,17 @@
 CC = gcc
 rust_CC = cargo
 
-.PHONY: build clean
+.PHONY: build clean menuconfig
 
 build:
-	./build.sh build
+	@./build.sh build
 
 clean:
-	./build.sh clean
+	@./build.sh clean
+
+menuconfig:
+	@./build.sh menuconfig
+
+test:
+	@./build.sh clean
+	@./build.sh build

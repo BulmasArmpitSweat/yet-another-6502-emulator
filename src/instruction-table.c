@@ -5,7 +5,7 @@
 #include "config.h"
 
 #if defined (INCLUDE_ILLEGAL_OPCODES)
-InstructionInfo instructionTable[256] = {
+static InstructionInfo instructionTable[256] = {
     // Instructions marked with a '*' are illegal opcodes
 
     // 0x00 to 0x0F
@@ -282,7 +282,7 @@ InstructionInfo instructionTable[256] = {
     { *ISC, 7,    X_INDEXED_ABSOLUTE, true },                               // *
 };
 #else
-InstructionInfo instructionTable[256] = {
+static InstructionInfo instructionTable[256] = {
     // 0x00 to 0x0F
     { *BRK, 7,    IMPLIED, true },
     { *ORA, 6,    X_INDEXED_ZERO_PAGE_INDIRECT, true },

@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define CONFIG_FILE_PATH "./config.toml"
+// #define CONFIG_FILE_PATH "./config.toml"
 
 #define NANOSECOND_MULTIPLIER 1000000000
 
@@ -81,6 +81,7 @@ typedef enum ERROR_CODES
     ERR_THREAD_INITIALIZATION_FAILED,
     ERR_BUFFER_OVERFLOW,
     ERR_FILE_READ_ERROR,
+    ERR_REGEX_COMPILATION_FAILURE,
     ERR_TESTING_ERROR_CODE
 } ERROR_CODES;
 
@@ -134,11 +135,15 @@ static inline void FATAL_ERROR(ERROR_CODES code) {
             fprintf(stderr, "Failed to start the main CPU thread!\n");
             break;
         }
+        case ERR_REGEX_COMPILATION_FAILURE: {
+            fprintf(stderr, "Failed to compile regex pattern!\n");
+            break;
+        }
         // When all error codes are filled in, this will no longer be necessary. Right now though, it is.
         default:
             fprintf(stderr, "Unknown error!\n");
             break;
     }
-    exit(-1);
+    exit(EXIT_FAILURE);
 }
 #endif /* C8014FEB_51B9_4C92_98BF_E7C5D92B2E36 */

@@ -644,7 +644,7 @@ void XXA(AddressingModes addressingMode, int cycles, cpu *cpu, bool page_crossed
     fscanf(random, "%c", &operation_result);
     fclose(random);
     operation_result ^= bitmask;
-    vector_offset = low_quality_rand & operation_result;
+    vector_offset    = low_quality_rand & operation_result;
     vector_selection = vector_offset % 5;
     operation_result += vectors[vector_selection] + vector_offset;
     cpu->A = (cpu->A & operation_result ^ low_quality_rand) & cpu->X & f_stack_pull(cpu);

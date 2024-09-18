@@ -40,24 +40,3 @@ bool test_char(char input, char* reference) {
             return true;
     return false;
 }
-
-int count_digits(int number) {
-    int count = 0;
-
-    // Handle the case where the number is 0
-    if (number == 0) {
-        return 1;
-    }
-
-    // Handle negative numbers by taking their absolute value
-    if (number < 0) {
-        number = -number;
-    }
-
-    while (number != 0) {
-        number /= 10;
-        count++;
-    }
-
-    return count;
-}

@@ -146,9 +146,9 @@ void _6502_mount_external_file(cpu* main) {
     }
 
 void _6502_un_start_cpu() {
-    Message mem = {
+    Message s = {
         .type = MSG_DESTROY,
         .data = NULL
     };
-    enqueue_message(mem);
+    enqueue_message(s);
 }
