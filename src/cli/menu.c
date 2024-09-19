@@ -14,6 +14,7 @@
 
 // TODO: Implement regex checking with this pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
 
+__attribute__((optimize("Ofast")))
 char* replace_string(const char* str, const char* replace_this, const char* with_that) {
     // Find the number of occurrences of 'replace_this' in 'str'
     int count = 0;
@@ -56,6 +57,7 @@ char* replace_string(const char* str, const char* replace_this, const char* with
     return result;
 }
 
+__attribute__((optimize("Ofast")))
 char** split_string(char* str, char delimiter, int* num_tokens) {
     char* token;
     char* str_cpy = strdup(str);
@@ -109,7 +111,7 @@ char** split_string(char* str, char delimiter, int* num_tokens) {
     return result;
 }
     
-
+__attribute__((optimize("Ofast")))
 int resolve_cli_input(char *input, cpu *main) {
     /* Calculate length of input string */
     uint8_t len = strlen(input);
