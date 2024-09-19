@@ -136,7 +136,7 @@ int resolve_cli_input(char *input, cpu *main) {
     ) {
         return EXIT_SUCCESS;
     } else if (
-        /* Dump memory binary contents to either external file */
+        /* Dump memory binary contents to external file */
         strcmp(input_tokens[0], "dump") == 0 ||
         strcmp(input_tokens[0], "dum")  == 0 ||
         strcmp(input_tokens[0], "du")   == 0 ||
@@ -146,26 +146,25 @@ int resolve_cli_input(char *input, cpu *main) {
 
         /* Get output destination selection from user */
         char* file_path = malloc(sizeof(char) * 100);
-        printf("path to external file (will be created if it doesn't exist): ");
+        printf("path to external file (will be created if it doesn't exist (max 100 chars)): ");
         scanf("%100s", file_path);
         output = fopen(file_path, "w");
-        free(file_path);
-        if (output == NULL) {
+        if (output == NULL)
             fprintf(stderr, "Failed to open external file. Are you sure you inputted the right path, and that you have write permissions to the folder?\n");
-        }
-
+        free(file_path);
+        
         ushort num_zeros = 0;
         for (ushort pos = 0; pos <= MAX_MEM_LEN; pos++) {
             if (pos % 16 == 0) {
                 /* Round off the previous line */
                 fprintf(output, "|\n");
-                fprintf(output, "0x%004x -> 0x%004x:: ", pos, (pos + 15 < MAX_MEM_LEN) ? pos + 15 : MAX_MEM_LEN - 1);
+                fprintf(output, "0x%04x -> 0x%04x:: ", pos, (pos + 15 < MAX_MEM_LEN) ? pos + 15 : MAX_MEM_LEN - 1);
             }
-            fprintf(output, "%002x ", main->mem[pos]);
+            fprintf(output, "%02x ", main->mem[pos]);
             if (main->mem[pos] == 0)
                 num_zeros++;
         }
-        fprintf(output, "\n%d bytes (%Lf%%) of the internal memory is filled", MAX_MEM_LEN - num_zeros, ((MAX_MEM_LEN - num_zeros) / (long double)MAX_MEM_LEN) * 100.0);
+        fprintf(output, "\n%d bytes (%Lf%%) of the internal memory is filled", MAX_MEM_LEN - num_zeros, ((MAX_MEM_LEN - num_zeros) / MAX_MEM_LEN) * 100.0);
         free(file_path);
     } else if (
         strcmp(input_tokens[0], "registers") == 0 ||
@@ -178,7 +177,7 @@ int resolve_cli_input(char *input, cpu *main) {
         strcmp(input_tokens[0], "re")        == 0 ||
         strcmp(input_tokens[0], "r")         == 0
     ) {
-        printf("Printing CPU register contents::\n");
+        printf("Printing CPU register contents::\n\n");
 
         printf("General purpose registers::\n");
         printf("    A (Accumulator): 0x%02x\n\n", main->A);
