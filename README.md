@@ -6,7 +6,4 @@ This will serve as a way for me to get better at coding.
 
 My ultimate goal is to have it writing to a software terminal, hopefully run by SDL.
 
-NOTE: the included compiler is not made by me, and so doesn't natively include the illegal opcodes.
-You will need to compile with them enabled, and manually write bytecode that accesses them.
-
-Sorry.
+#/ NOTE: If you intend to compile this project, you need the boost development headers installed

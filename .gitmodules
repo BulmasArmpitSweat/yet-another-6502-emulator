@@ -1,0 +1,12 @@
+[submodule "src/assembler/lib/argparse"]
+	path = src/assembler/lib/argparse
+	url = https://github.com/p-ranav/argparse.git
+[submodule "src/assembler/lib/endian"]
+	path = src/assembler/lib/endian
+	url = https://github.com/boostorg/endian.git
+[submodule "src/assembler/lib/algorithm"]
+	path = src/assembler/lib/algorithm
+	url = https://github.com/boostorg/algorithm.git
+[submodule "src/assembler/lib/regex"]
+	path = src/assembler/lib/regex
+	url = https://github.com/boostorg/regex.git

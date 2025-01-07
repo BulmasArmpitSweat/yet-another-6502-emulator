@@ -1,0 +1,6 @@
+CompileFlags:
+  Add: -I./lib
+
+Diagnostics:
+  # Turn errors in included header files into warnings
+  Suppress: ['header-not-found']
