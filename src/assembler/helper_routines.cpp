@@ -94,6 +94,8 @@ static std::string clean_line(const std::string& line) {
         if (!std::isspace(ch))
             return_line.push_back(ch);
     }
+    if (return_line.back() == '\n')
+        return_line.pop_back();
     return return_line;
 }
 

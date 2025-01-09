@@ -55,7 +55,7 @@ int convert_value_literal(const std::string& literal, const int base) {
     return std::stoi(literal, nullptr, base);
 }
 
-std::string convert_value_literal_back(const int value, const int base) {
+std::string reverse_convert_value_literal(const int value, const int base) {
     int temp = value;
     if (base < 2 || base > 36) {
         throw std::invalid_argument("Base must be in the range [2, 36]");

@@ -9,6 +9,7 @@
 #include "lib/endian/include/boost/endian.hpp"
 #include "lib/algorithm/include/boost/algorithm/string.hpp"
 
+#include <algorithm>
 #include <cctype>
 #include <cstddef>
 #include <cstdlib>
@@ -142,7 +143,10 @@ void assemble(int argc, char** argv) {
     lines = lineify(buffer);
     macros = find_macros(lines);
     lines = strip_macros(lines);
-
+    circular_macro_call_test(macros);
+    for (int i = 0; i < macros.size(); i++)
+        macros[i].lines = resolve_arguments(macros[i]);
+    lines = handle_macros(lines, macros);
 
     // First pass: handle labels, assembler options, and variables
     int idx = 0;
@@ -343,7 +347,12 @@ void assemble(int argc, char** argv) {
                 "BCC", "BCS", "BEQ", "BMI", "BNE", "BPL", "BVC", "BVS" };
 
             if (addr == Addr_Modes::ABSOLUTE && std::find(branches.begin(), branches.end(), mnemonic) != branches.end()) {
-                int8_t offset = std::round(value / 2) - (position + 2);
+                int offset = std::round(value / 2) - (position + 2);
+                if (offset < INT8_MIN || offset > INT8_MAX) {
+                    delete_intermediate_files(output_file, token_file);
+                    error_linenum(idx + 1, "offset for " + mnemonic + " branch is out of range (INT8_MIN <> INT8_MAX); offset: " + std::to_string(offset));
+                    wontreturn;
+                }
                 output_file->stream.write(reinterpret_cast<const char *>(&offset), sizeof(offset));
                 goto skip_iteration;
             }

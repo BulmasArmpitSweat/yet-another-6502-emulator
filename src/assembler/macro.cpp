@@ -2,18 +2,42 @@
 
 #include "include.cpp"
 #include "helper_routines.cpp"
+#include "value_literal.cpp"
+#include "tokenize.cpp"
 
+#include <algorithm>
 #include <cstddef>
+#include <cstdint>
 #include <cstdlib>
 #include <sstream>
+#include <tuple>
 #include <vector>
 #include <string>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+
+std::unordered_set<std::string> currently_expanding;
+std::unordered_map<std::string, std::vector<std::string>> expanded_cache;
 
 struct macro {
     int position;
     std::string name;
     std::string argument;
     std::vector<std::string> lines;
+    struct macro empty() const {
+        return macro { .position = -1, .name = "", .argument = "" };
+    }
+
+    bool is_empty() {
+        if (position == -1 && name == "" && argument == "")
+            return true;
+        return false;
+    }
+
+    bool operator==(const struct macro& other) const {
+        return (position == other.position && name == other.name && lines == other.lines);
+    }
 };
 
 /// \brief Check if a line starts with ".macro".
@@ -21,7 +45,7 @@ struct macro {
 /// \param line The line to check.
 ///
 /// \returns true if the line starts with ".macro", false otherwise.
-static inline bool is_macro_line(std::string& line) {
+static inline bool is_macro_line(const std::string& line) {
     return (line.rfind(".macro", 0) == 0);
 }
 
@@ -30,8 +54,99 @@ static inline bool is_macro_line(std::string& line) {
 /// \param line The line to check.
 ///
 /// \returns true if the line starts with ".endmacro", false otherwise.
-static inline bool is_macro_endline(std::string& line) {
+static inline bool is_macro_endline(const std::string& line) {
     return (line.rfind(".endmacro", 0) == 0);
+}
+
+/// \brief Check if a line starts with ".call".
+///
+/// \param line The line to check.
+///
+/// \returns true if the line starts with ".call", false otherwise.
+static inline bool is_macro_call_sub_instruction(const std::string& line) {
+    return (line.rfind(".call", 0) == 0);
+}
+
+/// \brief Check if a macro has a nested macro .call sub_instruction.
+///
+/// \param macro The macro to check.
+///
+/// \returns true if the macro has a nested macro .call sub_instruction, false otherwise.
+static inline bool macro_contains_macro_call(struct macro macro) {
+    // Find if a macro has a nested macro .call sub_instruction
+    for (std::string& line : macro.lines) {
+        if (is_macro_call_sub_instruction(line))
+            return true;
+    }
+    return false;
+}
+
+/// \brief Strip ".call" and the following space from a line that calls a macro.
+///
+/// Given a line that calls a macro (i.e. a line that starts with ".call"), this
+/// function strips the ".call" and the following space from the string and
+/// returns the resulting string.
+static inline std::string strip_call_sub_instruction(const std::string& line) {
+    std::string temp = line;
+    temp = temp.substr(5);
+    return temp;
+}
+
+static inline struct macro find_macro_in_table(std::vector<struct macro>& macros, const struct macro& target) {
+    for (const struct macro& macro : macros) {
+        if (macro == target)
+            return target;
+    }
+    return target.empty();
+}
+
+static inline struct macro find_macro_in_table_from_name(const std::vector<struct macro>& macros, const std::string& target) {
+    for (const struct macro& macro : macros) {
+        if (macro.name == target)
+            return macro;
+    }
+    return macros[0].empty();
+}
+
+/// \brief Extract macro information from a line that calls a macro.
+///
+/// Given a line that calls a macro (i.e. a line that starts with ".call"), this
+/// function extracts the name of the macro and its argument (if any) and packs
+/// them into a struct macro.
+///
+/// \param calling_line The line that calls the macro.
+/// \param linenum The line number of the calling line.
+///
+/// \returns A struct macro with the extracted information.
+static inline struct macro get_macro_info_from_call(const std::string& calling_line, int linenum) {
+    std::string temp = calling_line;
+    temp = clean_line(temp);
+    struct macro macro;
+
+    if (temp.empty())
+        return macro.empty();
+
+
+    /* Length of '.call' subinstruction, implying that nothing was passed to it */
+    if (temp.length() == 5) {
+        delete_intermediate_files(output_file, token_file);
+        error_linenum(linenum, "Expected macro name and optional arguments after call subinstruction");
+        wontreturn;
+    }
+
+    temp = temp.erase(5); // Erase '.call' from start
+    if (temp.find(':') != std::string::npos) {
+        macro.name = temp.substr(0, temp.find(':'));
+    } else {
+        macro.name = temp; // Line contains nothing else but the name at this point
+        macro.argument = "";
+        macro.position = -1; // Position isn't needed here
+        return macro;
+    }
+
+    macro.argument = temp.substr(temp.find(':'), temp.length());
+    macro.position = -1;
+    return macro;
 }
 
 /// \brief Split a string into a vector of strings.
@@ -54,6 +169,110 @@ static inline std::vector<std::string> split_arguments(std::string& arguments, c
     return result;
 }
 
+/// \brief Build a directed graph of macro calls.
+///
+/// Given a vector of macro structures, this function builds a directed graph of
+/// macro calls. Each node in the graph represents a macro, and each edge
+/// represents a call from one macro to another.
+///
+/// \param macros The vector of macro structures to build the graph with.
+///
+/// \returns A map of macro names to vectors of macro names, where each key in
+/// the map is a macro name and the value associated with it is a vector of
+/// macro names that it calls.
+static inline std::map<std::string, std::vector<std::string>> build_macro_graph(const std::vector<struct macro>& macros) {
+    std::map<std::string, std::vector<std::string>> graph;
+    for (const struct macro& macro : macros) {
+        for (const std::string& line : macro.lines) {
+            if (is_macro_call_sub_instruction(line)) {
+                std::string called_macro = strip_call_sub_instruction(line);
+                graph[macro.name].push_back(called_macro);
+            }
+        }
+    }
+    return graph;
+}
+
+/// \brief Detect a cycle in a directed macro graph.
+///
+/// \param node The node to check.
+/// \param graph The graph to check.
+/// \param visited A set of visited nodes.
+/// \param recursion_stack A set of nodes in the current recursion stack.
+/// \param path A vector of nodes to store the path of the cycle.
+///
+/// \returns true if a cycle is detected, false otherwise.
+static inline bool detect_cycle(const std::string& node, const std::map<std::string, std::vector<std::string>>& graph,
+                                std::set<std::string>& visited, std::set<std::string>& recursion_stack,
+                                std::vector<std::string>& path) {
+    visited.insert(node);
+    recursion_stack.insert(node);
+    path.push_back(node);
+
+    for (const std::string& neighbour : graph.at(node)) {
+        if (recursion_stack.find(neighbour) != recursion_stack.end()) {
+            // Cycle detected, print the path
+            std::cerr
+                << bcoloursToString(bcolours::WARNING) 
+                << "[WARN]: " 
+                << bcoloursToString(bcolours::ENDC)
+                << bcoloursToString(bcolours::BOLD)
+                << "Potential circular macro call detected: ";
+            auto itr = std::find(path.begin(), path.end(), neighbour);
+            for (; itr != path.end(); ++itr) {
+                std::cerr 
+                    << *itr 
+                    << " -> ";
+            }
+            std::cerr 
+                << neighbour 
+                << " <- loops back to "
+                << neighbour
+                << bcoloursToString(bcolours::ENDC)
+                << "\n";
+            return true;
+        }
+
+        if (visited.find(neighbour) == visited.end()) {
+            if (detect_cycle(neighbour, graph, visited, recursion_stack, path)) {
+                return true;
+            }
+        }
+    }
+
+    recursion_stack.erase(node);
+    path.pop_back();
+    return false;
+}
+
+
+    /**
+     * Checks if there is a circular macro call in the list of macros.
+     * 
+     * @param macros The list of macros to check.
+     * 
+     * @return true if a circular macro call is detected, false otherwise.
+     */
+static bool circular_macro_call_test(std::vector<struct macro> macros) {
+    // Base case
+    if (macros.size() < 2)
+        return false;
+
+    auto graph = build_macro_graph(macros);
+    std::set<std::string> visited;
+    std::set<std::string> recursion_stack;
+    std::vector<std::string> path;
+
+    for (const auto& [macro_name, _] : graph) {
+        if (visited.find(macro_name) == visited.end()) {
+            if (detect_cycle(macro_name, graph, visited, recursion_stack, path)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 /// \brief Find all macros in a file and return them in a vector.
 ///
 /// This function goes through a vector of strings and finds all the macros in it.
@@ -64,7 +283,7 @@ static inline std::vector<std::string> split_arguments(std::string& arguments, c
 /// Macros must have a name and a ':' only if an optional argument is intended to be passed.
 ///
 /// If any of these rules are broken, an error is printed and the program aborts.
-static std::vector<struct macro> find_macros(std::vector<std::string>& lines) {
+static inline std::vector<struct macro> find_macros(std::vector<std::string>& lines) {
     int linenum = 0;
     std::vector<struct macro> macros;
     struct macro head;
@@ -133,7 +352,6 @@ static std::vector<struct macro> find_macros(std::vector<std::string>& lines) {
 /// \param macro The macro structure containing the lines and arguments to be processed.
 ///
 /// \returns A vector of strings where all argument placeholders have been resolved.
-
 static std::vector<std::string> resolve_arguments(struct macro macro) {
     std::vector<std::string> lines = macro.lines;
     std::vector<std::string> arguments = split_arguments(macro.argument, ',');
@@ -173,34 +391,124 @@ static std::vector<std::string> resolve_arguments(struct macro macro) {
     return lines;
 }
 
-/// \brief Inserts the contents of a macro into a vector of assembly lines.
-///
-/// This function takes a vector of assembly lines, a macro structure, and an
-/// index position, and inserts the contents of the macro into the vector of
-/// lines at the specified position. The macro is inserted as a single
-/// instruction jump to a label, followed by a jump to an ("end_" + name) label
-/// (which marks the end of the macro), followed by the macro itself, and
-/// finally followed by a return instruction. The macro is inserted at the
-/// specified position in the vector of lines, and the indices of all lines
-/// following the insertion point are incremented by the number of lines in
-/// the macro.
-static std::vector<std::string> insert_macro(std::vector<std::string>& lines, struct macro macro, int position) {
-    std::vector<std::string> temp = lines;
-    std::string name = macro.name.substr(macro.name.find_first_not_of('.'));
-    int idx_offset = 0;
-    temp[position] = "JSR " + name;
-    idx_offset++;
-    temp.insert(temp.begin() + (position + idx_offset++), "JMP end_" + name);
-    temp.insert(temp.begin() + (position + idx_offset++), name + ":");
-    for (std::string& line : macro.lines) {
-        temp.insert(temp.begin() + (position + idx_offset++), line);
+static inline std::vector<std::string> expand_macro(const std::string& macro_name, const struct macro& macro, const std::vector<struct macro>& macros, int linenum) {
+    if (currently_expanding.count(macro_name)) {
+        delete_intermediate_files(output_file, token_file);
+        error_linenum(linenum, "Infinite macro call cycle in macro: " + macro_name);
+        wontreturn;
     }
-    temp.insert(temp.begin() + (position + idx_offset++), "RTS");
-    temp.insert(temp.begin() + (position + idx_offset), "end_" + name + ":");
 
-    return temp;
+    currently_expanding.insert(macro_name);
+
+    std::vector<std::string> expanded_lines;
+    for (const std::string& line : macro.lines) {
+        if (is_macro_call_sub_instruction(line)) {
+            std::string called_macro_name = get_macro_info_from_call(line, linenum).name;
+            if (std::find(macros.begin(), macros.end(), called_macro_name) != macros.end()) {
+                std::vector<std::string> sub_expansion = expand_macro(called_macro_name, find_macro_in_table_from_name(macros, called_macro_name), macros, linenum);
+                expanded_lines.insert(expanded_lines.end(), sub_expansion.begin(), sub_expansion.end());
+            }
+        } else {
+            expanded_lines.push_back(line);
+        }
+    }
+
+    currently_expanding.erase(macro_name);
+    return expanded_lines;
 }
 
+static inline std::vector<std::string> expand_macro_with_cache(const std::string& macro_name, const struct macro& macro, const std::vector<struct macro>& macros, int linenum) {
+    if (expanded_cache.count(macro_name)) {
+        return expanded_cache[macro_name];
+    }
+
+    std::vector<std::string> expanded_lines = expand_macro(macro_name, macro, macros, linenum);
+    expanded_cache[macro_name] = expanded_lines;
+    return expanded_lines;
+}
+
+static inline std::pair<bool, int> can_reuse_macro(const struct macro& target_macro, const std::vector<std::string>& lines, int current_line_idx, int max_offset_forwards, int max_offset_backwards) {
+    int offset = 0;
+    for (int i = current_line_idx; i >= 0; i--) {
+        if (is_macro_call_sub_instruction(lines[i])) {
+            std::string called_macro_name = get_macro_info_from_call(lines[i], current_line_idx).name;
+            if (called_macro_name == target_macro.name) {
+                // can use it, offset
+                return std::pair(true, -i);
+            } else {
+                Addr_Modes mode = get_addr_mode(lines[i], current_line_idx);
+                offset += size_in_bytes[mode];
+                if (offset > max_offset_backwards) {
+                    break;
+                }
+            }
+        }
+    }
+    offset = 0;
+    for (int i = current_line_idx; i < lines.size(); i++) {
+        if (is_macro_call_sub_instruction(lines[i])) {
+            std::string called_macro_name = get_macro_info_from_call(lines[i], current_line_idx).name;
+            if (called_macro_name == target_macro.name) {
+                // can use it, offset
+                return std::pair(true, i);
+            } else {
+                Addr_Modes mode = get_addr_mode(lines[i], current_line_idx);
+                offset += size_in_bytes[mode];
+                if (offset > max_offset_forwards) {
+                    break;
+                }
+            }
+        }
+    }
+
+    return std::pair(false, 0);
+}
+
+std::pair<std::string, std::vector<std::string>> define_macro_subroutine(const std::string& macro_name, const std::vector<std::string>& expanded_lines, int linenum) {
+    std::tuple<std::string, std::vector<std::string>> output;
+    std::string subroutine_label = "macro_" + macro_name;
+    std::vector<std::string> output_code;
+    output_code.push_back(subroutine_label + ":");
+    output_code.insert(output_code.end(), expanded_lines.begin(), expanded_lines.end());
+    output_code.push_back("RTS");
+    return std::pair(subroutine_label, output_code);
+}
+
+std::vector<std::string> handle_macros(std::vector<std::string>& lines, const std::vector<struct macro>& macros) {
+    int linenum = 1;
+    bool foundmacro = false;
+    for (; linenum < lines.size(); linenum++) {
+        if (!is_macro_call_sub_instruction(lines[linenum]))
+            continue;
+        foundmacro = true;
+        struct macro target = get_macro_info_from_call(lines[linenum], linenum);
+        if (std::find(macros.begin(), macros.end(), target) == macros.end()) {
+            delete_intermediate_files(output_file, token_file);
+            error_linenum(linenum, "Attempting to call to an undefined macro");
+            wontreturn;
+        } else if (std::find(macros.begin(), macros.end(), target)->position > linenum) {
+            delete_intermediate_files(output_file, token_file);
+            error_linenum(linenum, "Attempting to call to a macro that is not yet defined");
+            wontreturn;
+        }
+        struct macro macro_to_expand = find_macro_in_table_from_name(macros, target.name);
+        std::pair<bool, int> can_reuse = can_reuse_macro(macro_to_expand, lines, linenum, INT8_MAX, INT8_MIN);
+        if (can_reuse.first == true) {
+            lines[linenum] = "JSR $" + reverse_convert_value_literal(can_reuse.second, 16);
+            break;
+        } else {
+            std::pair<std::string, std::vector<std::string>> subroutine = define_macro_subroutine(macro_to_expand.name, macro_to_expand.lines, linenum);
+            std::vector<std::string> reversed_lines = subroutine.second;
+            std::reverse(reversed_lines.begin(), reversed_lines.end());
+            for (std::string line : reversed_lines)
+                lines.insert(lines.begin() + linenum, line);
+            break;
+        }
+    }
+    if (foundmacro == true)
+        handle_macros(lines, macros);
+    return lines;
+}
 /// \brief Removes macro definitions from a list of assembly lines.
 ///
 /// This function processes a list of assembly lines and removes any lines 
