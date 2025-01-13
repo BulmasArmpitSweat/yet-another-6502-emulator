@@ -34,9 +34,9 @@ pub fn Help() {
 }
 
 fn instruction_help(instr: &include::help_message) -> () {
-    println!("Mnemonic: {}", instr.mnemonic.to_uppercase());
-    println!("Summary: {}", instr.operation_summary.to_uppercase());
-    println!("Category: {}", instr.category.to_uppercase());
+    println!("Mnemonic:  {}", instr.mnemonic.to_uppercase());
+    println!("Summary:   {}", instr.operation_summary.to_uppercase());
+    println!("Category:  {}", instr.category.to_uppercase());
     println!("Operation: {}", instr.operation_string);
     println!("| C | Z | I | D | B | _ | V | N |");
     print!("|");

@@ -1,0 +1,59 @@
+{
+    "name": "6502asm-new-and-not-improved",
+    "scopeName": "source.6502asm-new-and-not-improved",
+    "patterns": [
+        {
+            "name": "comment.line",
+            "match": "(//.*$|;.*$)"
+        },
+        {
+            "name": "comment.block",
+            "match": "/\\*.*\\*/"
+        },
+
+        {
+            "name": "constant.numeric",
+            "match": "\\$([0-9A-Fa-f]+|0[Xx][0-9A-Fa-f]+|0[Bb][01]+|[0-9A-Fa-f]+[HhDd](?=\\b))"
+        },
+
+        {
+            "name": "variable.parameter",
+            "match": ":=\\s*[A-Z_]+\\s*$"
+        },
+        {
+            "name": "entity.name.method",
+            "match": "([a-zA-Z]+:)"
+        },
+
+        {
+            "name": "keyword",
+            "match": "\\s*\\b(LDA|LDX|LDY|STA|STX|STY|TAX|TAY|TSX|TXA|TXS|TYA|PHA|PHP|PHA|PLA|PLP|ASL|LSR|ROL|ROR|AND|BIT|EOR|ORA|ADC|CMP|CPX|CPY|SBC|DEC|DEX|DEY|INC|INX|INY|BRK|JMP|JSR|RTS|RTI|BCC|BCS|BEQ|BMI|BNE|BPL|BVC|BVS|CLC|CLD|CLI|CLV|SEC|SED|SEI|NOP)\\b"
+        },
+        {
+            "name": "invalid.depracated",
+            "match": "\\s*\\b(LAS|LAX|SAX|SHA|SHX|SHY|SHS|ANC|ARR|ASR|DCP|ISC|RLA|RRA|SBX|SLO|SRE|XXA|JAM)\\b"
+        },
+        {
+            "name": "keyword.control",
+            "match": "\\i\\s*#OPT\\s*=\\s*(\\w+)$"
+        },
+
+        {
+            "name": "keyword.operator",
+            "match": "(\\#{1}|:=|\\=|\\+|\\-|\\*|\\/|\\%|\\^)"
+        },
+
+        {
+            "name": "variable.name",
+            "match": "(,[Xx]|,[Yy]|[Aa])"
+        },
+
+        {
+            "name": "invalid.illegal",
+            "match": "\\i[0x0b][0-9A-Fa-f]{4,}[hd]|#{1,}"
+        }
+    ],
+    "repository": {},
+    "fileTypes": ["asm6502asm-new-and-not-improved"],
+    "uuid": "your-uuid-here"
+}

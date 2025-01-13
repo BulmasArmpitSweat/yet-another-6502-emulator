@@ -1,0 +1,25 @@
+{
+  "name": "6502-asm-variant-syntax-highlight",
+  "displayName": "6502-asm-variant-syntax-highlight",
+  "description": "Yet another extension that adds syntax highlighting support for the 6502 assembly language, but this time, it is a variant, a bad one to be precise. Mainly to help with my own development",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+        "languages": [{
+            "id": "6502asm-new-and-not-improved",
+            "aliases": ["6502 Assembly (New)", "6502asm-new-and-not-improved"],
+            "extensions": [".S", ".s", ".asm", ".ASM", ".6502asm"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "6502asm-new-and-not-improved",
+            "scopeName": "source.6502asm-new-and-not-improved",
+            "path": "./syntaxes/6502asm-new-and-not-improved.tmLanguage.json"
+        }]
+    }
+}
