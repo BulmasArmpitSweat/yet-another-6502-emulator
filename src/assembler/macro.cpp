@@ -505,9 +505,11 @@ std::vector<std::string> handle_macros(std::vector<std::string>& lines, const st
             break;
         }
     }
-    if (foundmacro == true)
-        handle_macros(lines, macros);
-    return lines;
+    if (foundmacro == false)
+        return lines;
+    handle_macros(lines, macros);
+    // Shouldn't get here
+    wontreturn;
 }
 /// \brief Removes macro definitions from a list of assembly lines.
 ///

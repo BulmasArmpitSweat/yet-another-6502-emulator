@@ -237,6 +237,9 @@ std::map<std::string, bool> assembler_options = {
     {"NO-UNDOCUMENTED-INSTRUCTION-WARNING", false},
     {"KEEP-TEMPS", false},
     {"KEEP-OUTPUT-ON-FAIL", false},
+    {"VERBOSE", false},
+    {"NO_CYCLICAL_MACRO_CALL_WARNING", false},
+    
 };
 
 std::map<Addr_Modes,  std::vector<std::string>> addressing_mode_patterns = {
