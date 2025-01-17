@@ -4,3 +4,5 @@ PAT
 .push_update.sh
 .clangd
 .Makefile
+*.x86_64
+a.out
