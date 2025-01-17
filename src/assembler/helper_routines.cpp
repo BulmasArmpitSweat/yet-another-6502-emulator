@@ -12,23 +12,24 @@
 #include <cstring>
 #include <iostream>
 
+#include "lib/algorithm/include/boost/algorithm/string/trim.hpp"
 #include "lib/regex/include/boost/regex/v5/regex.hpp"
 #include "include.cpp"
 
-static failstate try_write_tokens(std::vector<Token> tokens, struct line& line, file_handle* output_file, int linenum) {
+static failstate try_write_tokens(std::vector<Token>& tokens, struct line& line, file_handle& output_file, int linenum) {
     try {
-        output_file->stream
+        output_file.stream
             << "Tokens for line "
             << linenum
             <<":"
             << std::endl;
         
         for (Token tok : tokens)
-            output_file->stream 
+            output_file.stream 
                 << tok.to_string() 
                 << std::endl;
         
-        output_file->stream
+        output_file.stream
             << "Internal representation for line "
             << linenum
             << ":"
@@ -38,7 +39,7 @@ static failstate try_write_tokens(std::vector<Token> tokens, struct line& line, 
         std::size_t size = sizeof(line);
 
         for (std::size_t i = 0; i < size; ++i) {
-            output_file->stream 
+            output_file.stream 
                 << std::hex 
                 << std::uppercase 
                 << std::setfill('0') 
@@ -46,7 +47,7 @@ static failstate try_write_tokens(std::vector<Token> tokens, struct line& line, 
                 << static_cast<int>(bytes[i]) 
                 << ' ';
         }
-        output_file->stream 
+        output_file.stream 
             << std::dec 
             << std::endl; // Reset to decimal output after printing
     } catch (failstate e) {
@@ -61,21 +62,29 @@ static std::string buffer_cleanup(const std::string& buffer) {
 }
 
 static std::vector<std::string> line_split(const std::string& buffer) {
-    std::vector<std::string> return_list;
+    std::vector<std::string> list;
     std::istringstream stream(buffer);
 
     std::string line;
 
     while (std::getline(stream, line)) {
-        return_list.push_back(line);
+        list.push_back(line);
     }
 
-    return return_list;
+    return list;
 }
 
+/**
+ * Breaks a given string into a vector of strings, each representing a line.
+ * All whitespace and comments are ignored.
+ *
+ * @param buffer the string to be broken up
+ * @return a vector of strings, each representing a line
+ */
 static std::vector<std::string> lineify(const std::string& buffer) {
-    boost::regex commentRegex(R"(//[^\n]*|/\*.*?\*/|;[^\n]*)");
+    boost::regex commentRegex(R"(\/\/.*|;.*|\/\*[\s\S]*?\*\/)");
     std::string cleanedBuffer = boost::regex_replace(buffer, commentRegex, "");
+    boost::algorithm::trim(cleanedBuffer);
     std::vector<std::string> lines = line_split(cleanedBuffer);
 
     return lines;
@@ -114,5 +123,5 @@ static std::string join_tokens(const std::vector<Token>& tokens, bool strip_eof 
 template <typename... Files>
 static inline void delete_intermediate_files(Files&&... files) {
     if (assembler_options["KEEP-OUTPUT-ON-FAIL"])
-        (..., files->delete_file());
+        (..., files.delete_file());
 }

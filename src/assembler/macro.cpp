@@ -404,9 +404,20 @@ static inline std::vector<std::string> expand_macro(const std::string& macro_nam
     for (const std::string& line : macro.lines) {
         if (is_macro_call_sub_instruction(line)) {
             std::string called_macro_name = get_macro_info_from_call(line, linenum).name;
-            if (std::find(macros.begin(), macros.end(), called_macro_name) != macros.end()) {
+            bool found = false;
+            for (int i = 0; i < macros.size(); i++) {
+                if (macros[i].name == called_macro_name) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found == true) {
                 std::vector<std::string> sub_expansion = expand_macro(called_macro_name, find_macro_in_table_from_name(macros, called_macro_name), macros, linenum);
                 expanded_lines.insert(expanded_lines.end(), sub_expansion.begin(), sub_expansion.end());
+            } else {
+                delete_intermediate_files(output_file, token_file);
+                error_linenum(linenum, "Attempt to call an undefined macro: " + called_macro_name);
+                wontreturn;
             }
         } else {
             expanded_lines.push_back(line);

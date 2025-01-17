@@ -11,11 +11,6 @@
 
 class file_handle;
 
-/* C++ only supports pointers for variables using forward-declared classes */
-file_handle* input_file;
-file_handle* output_file;
-file_handle* token_file;
-
 typedef char byte;
 typedef unsigned char byte_raw;
 typedef std::exception* failstate;
@@ -360,3 +355,8 @@ public:
         close();
     }
 };
+
+
+file_handle input_file;
+file_handle output_file;
+file_handle token_file;

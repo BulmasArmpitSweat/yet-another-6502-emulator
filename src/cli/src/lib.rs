@@ -19,10 +19,10 @@ struct Funcs {
 }
 
 #[no_mangle]
-pub extern "C" fn cli(argc: i8, argv: *const *const i8) -> () {
+pub extern "C" fn cli(argc: i8, argv: *const *const i8) -> bool {
     if argc < 2 {
-        err!("Missing arguments");
-        wontreturn!();
+        warn!("Missing arguments");
+        return false;
     }
 
     let args: Vec<String> = unsafe { std::slice::from_raw_parts(argv, argc as usize) }.iter().map(|&s| unsafe { std::ffi::CStr::from_ptr(s) }.to_str().unwrap().to_string()).collect();
@@ -37,7 +37,7 @@ pub extern "C" fn cli(argc: i8, argv: *const *const i8) -> () {
     let command_func = fn_pointers.get(&command);
     if command_func.is_none() {
         warn!("Unknown command: '{}'", command);
-        return ();
+        return false;
     }
 
     if args.len() > 2 {
@@ -54,5 +54,5 @@ pub extern "C" fn cli(argc: i8, argv: *const *const i8) -> () {
             }
         }
     }
-    return ();
+    return true;
 }

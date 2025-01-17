@@ -1,3 +1,6 @@
+#ifndef EB4D9005_CF3A_40AB_8349_0F425DA6B566
+#define EB4D9005_CF3A_40AB_8349_0F425DA6B566
+
 #include "load.h"
 #include "trans.h"
 #include "stack.h"
@@ -11,18 +14,39 @@
 #include "kil.h"
 #include "nop.h"
 
-#ifndef EB4D9005_CF3A_40AB_8349_0F425DA6B566
-#define EB4D9005_CF3A_40AB_8349_0F425DA6B566
 #include "6502-types.h"
 #include "../config.h"
 
 static cpu* main_cpu;
 
+static int step = 0;
+
+const int f_stack_transfer_8 = 0b0;
+const int f_stack_transfer_16 = 0b1;
+
+const int memory_transfer_8 = 0b0;
+const int memory_transfer_16 = 0b1;
+
+static byte_raw memory_transfer_buffer[MAX_MEM_LEN];
+static bool memory_transfer_type = 0b0;
+
+static short f_stack_transfer_buffer;
+static bool f_stack_transfer_type = 0b0;
+
+static cpu cpu_transfer_buffer;
+
+static struct thread_info thread_status = {
+    .status = STATUS_PAUSED,
+    .reset = RESET_FALSE,
+    .load_data = LOAD_DATA_NONE,
+    .destroyed = DESTROYED_FALSE
+};
+
 /*
     ------------------------------------------------------------------------------------------------------
     Websites used:
         https://www.princeton.edu/~mae412/HANDOUTS/Datasheets/6502.pdf
-        https://www.masswerk.at/6502/6502_instruction_set.html#SLO
+        https://www.masswerk.at/6502/6502_instruction_set.html
         https://www.pagetable.com/c64ref/6502/?tab=3#
 
         And a little help from...

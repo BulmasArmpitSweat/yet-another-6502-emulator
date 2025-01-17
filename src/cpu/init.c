@@ -4,21 +4,24 @@
 #include <string.h>
 #include <time.h>
 #include <string.h>
+#include <unistd.h>
 #include "mem.h"
 #include "thread.h"
 #include "init.h"
 
 void _6502_start_cpu(cpu* main) {
-    init_obj thread_args;
-    thread_args.CPUObjInit = *main;
+    byte_raw lo = main_cpu->mem[0xFFFC];
+    byte_raw hi = main_cpu->mem[0xFFFD];
+    _6502_set_reset_vec(main, lo, hi);
+
+    ushort PC = (ushort)(main_cpu->mem[0xFFFD] << 8 | main_cpu->mem[0xFFFC]);
+    main_cpu->PC = PC;
+
     pthread_t thread;
-    if (pthread_create(&thread, NULL, cpu_thread_func, (void*)&thread_args) != 0) {
+    if (pthread_create(&thread, NULL, (void*)cpu_thread_func, NULL) != 0) {
         FATAL_ERROR(ERR_THREAD_INITIALIZATION_FAILED);
     }
-    Message message;
-    message.type = MSG_RESUME;
-    message.data = NULL;
-    enqueue_message(message);
+
 }
 
 void _6502_prepopulate_values(cpu* cpu) {
@@ -98,7 +101,7 @@ void _6502_mount_external_file(cpu* main) {
     int file_size;
     printf("File to read: ");
     scanf("%0100s", file_path);
-    if (access(file_path, F_OK)) {
+    if (access(file_path, F_OK) != 0 || access(file_path, R_OK) != 0) {
         printf("ERROR: file either doesn't exist, or you don't have read permissions for it. Aborting read\n");
         return;
     }
@@ -146,9 +149,5 @@ void _6502_mount_external_file(cpu* main) {
     }
 
 void _6502_un_start_cpu() {
-    Message s = {
-        .type = MSG_DESTROY,
-        .data = NULL
-    };
-    enqueue_message(s);
+    thread_status.destroyed = DESTROYED_TRUE;
 }

@@ -8,6 +8,11 @@
 
 // #define CONFIG_FILE_PATH "./config.toml"
 
+#define noreturn __attribute__((__noreturn__))
+#define packed __attribute__((__packed__))
+
+#define wontreturn exit(EXIT_SUCCESS);
+
 #define NANOSECOND_MULTIPLIER 1000000000
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
@@ -29,7 +34,7 @@ typedef unsigned int uint;
 
 typedef unsigned short ushort;
 
-typedef struct foo
+typedef struct packed foo
 {
     unsigned x:1;
 } bit;
@@ -58,9 +63,9 @@ typedef enum
 #define MAX_MEM_LEN                    UINT16_MAX
 
 /* 0xFFFC */
-#define RESET_VECTOR                   MAX_MEM_LEN - 3
+#define RESET_VECTOR                   0xFFFC
 /* 0xFFFE */
-#define BRK_VECTOR                     MAX_MEM_LEN - 1
+#define BRK_VECTOR                     0xFFFE
 
 /* 256 */
 #define Z_PAGE_END                     0x100
@@ -113,7 +118,7 @@ typedef struct
     bool page_crossed_cycle_exception;
 } InstructionInfo;
 
-// TODO: Update implementation to have better error codes
+// TODO: Update implementation to not be so shit
 static inline void FATAL_ERROR(ERROR_CODES code) {
     switch (code) {
         case ERR_UNSUPPORTED_ADDR_MODE: {
@@ -147,4 +152,35 @@ static inline void FATAL_ERROR(ERROR_CODES code) {
     }
     exit(EXIT_FAILURE);
 }
+
+struct one_bit_boolean {
+    const unsigned int True:1;
+    const unsigned int False:1;
+};
+
+static struct one_bit_boolean boolean_1bit = {0b0, 0b1};
+
+const int STATUS_RUNNING = 0b00;
+const int STATUS_PAUSED = 0b01;
+const int STATUS_SINGLE_STEP = 0b10;
+const int STATUS_HALTED = 0b11;
+
+const int RESET_FALSE = 0b0;
+const int RESET_TRUE = 0b1;
+
+const int LOAD_DATA_NONE = 0b000;
+const int LOAD_DATA_F_STACK = 0b001;
+const int LOAD_MEMORY = 0b010;
+const int LOAD_CPU_ATTR = 0b011;
+
+const int DESTROYED_FALSE = 0b0;
+const int DESTROYED_TRUE = 0b1;
+
+struct packed thread_info {
+    int status:2;
+    int reset:1;
+    int load_data:3;
+    int destroyed:1;
+};
+
 #endif /* C8014FEB_51B9_4C92_98BF_E7C5D92B2E36 */
